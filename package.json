@@ -2,7 +2,9 @@
   "name": "react-firestore",
   "version": "0.0.1",
   "description": "React components to fetch data from firestore using render props",
-  "main": "index.js",
+  "main": "dist/react-firestore.cjs.js",
+  "jsnext:main": "dist/react-firestore.esm.js",
+  "module": "dist/react-firestore.esm.js",
   "scripts": {
     "build": "kcd-scripts build --bundle --p-react",
     "test": "kcd-scripts test"
