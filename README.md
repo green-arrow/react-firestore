@@ -34,13 +34,13 @@ with Firestore.
 This package is available on [npm][npm].
 
 ```
-npm install --save react-firestore
+npm install --save @green-arrow/react-firestore
 ```
 
 Or, if you're using [yarn][yarn]:
 
 ```
-yarn add react-firestore
+yarn add @green-arrow/react-firestore
 ```
 
 ## Usage

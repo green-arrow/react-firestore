@@ -1,5 +1,5 @@
 {
-  "name": "react-firestore",
+  "name": "@green-arrow/react-firestore",
   "version": "0.0.1",
   "description": "React components to fetch data from firestore using render props",
   "main": "dist/react-firestore.cjs.js",
@@ -7,7 +7,10 @@
   "module": "dist/react-firestore.esm.js",
   "scripts": {
     "build": "kcd-scripts build --bundle --p-react",
-    "test": "kcd-scripts test"
+    "test": "kcd-scripts test",
+    "test:build": "kcd-scripts test --no-watch",
+    "build-and-test": "npm run build -s && npm run test:build -s",
+    "prepublishOnly": "kcd-scripts validate build-and-test"
   },
   "repository": {
     "type": "git",
