@@ -21,6 +21,11 @@ There is still an escape hatch where the snapshot from Firestore is provided to
 your render function, in the event that you need more control over your interactions
 with Firestore.
 
+## Disclaimer
+
+This project is still a work in progress and in an alpha state.
+The API may update frequently.
+
 ## Table of Contents
 
 * [Installation](#installation)
