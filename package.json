@@ -1,5 +1,5 @@
 {
-  "name": "@green-arrow/react-firestore",
+  "name": "react-firestore",
   "version": "0.0.4",
   "description": "React components to fetch data from firestore using render props",
   "main": "dist/react-firestore.cjs.js",

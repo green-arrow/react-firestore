@@ -1,0 +1,67 @@
+export function createMocksForCollection(documentCollection) {
+  let snapshot;
+
+  if (documentCollection) {
+    snapshot = {
+      docs: documentCollection.map(doc => {
+        const { id, ...data } = doc;
+
+        return {
+          id,
+          data: () => ({ ...data }),
+        };
+      }),
+    };
+  }
+
+  return createBaseMocks(snapshot);
+}
+
+export function createMocksForDocument(doc) {
+  let snapshot;
+
+  if (doc) {
+    const { id, ...data } = doc;
+
+    snapshot = {
+      id: doc.id,
+      data: () => ({ ...data }),
+    };
+  }
+
+  return createBaseMocks(snapshot);
+}
+
+function createBaseMocks(snapshot) {
+  const unsubscribeMock = jest.fn();
+  let onSnapshotMock;
+
+  if (snapshot) {
+    onSnapshotMock = jest.fn(cb => {
+      cb(snapshot);
+
+      return unsubscribeMock;
+    });
+  } else {
+    onSnapshotMock = jest.fn().mockReturnValue(unsubscribeMock);
+  }
+
+  const query = { onSnapshot: onSnapshotMock };
+
+  query.orderBy = jest.fn().mockReturnValue(query);
+
+  const collectionMock = jest.fn().mockReturnValue(query);
+  const documentMock = jest
+    .fn()
+    .mockReturnValue({ onSnapshot: onSnapshotMock });
+  const firestoreMock = { collection: collectionMock, doc: documentMock };
+
+  return {
+    firestoreMock,
+    collectionMock,
+    documentMock,
+    query,
+    onSnapshotMock,
+    unsubscribeMock,
+  };
+}

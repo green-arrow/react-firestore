@@ -39,13 +39,13 @@ The API may update frequently.
 This package is available on [npm][npm].
 
 ```
-npm install --save @green-arrow/react-firestore
+npm install --save react-firestore
 ```
 
 Or, if you're using [yarn][yarn]:
 
 ```
-yarn add @green-arrow/react-firestore
+yarn add react-firestore
 ```
 
 ## Usage
