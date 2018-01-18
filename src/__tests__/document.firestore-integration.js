@@ -1,7 +1,6 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React from 'react';
 import { mount } from 'enzyme';
-import { FirestoreProvider, FirestoreDocument } from '../';
+import { FirestoreDocument } from '../';
 import { createMocksForDocument } from './helpers/firestore-utils';
 
 test('integrates with firestore using onSnapshot', () => {
@@ -17,10 +16,9 @@ test('integrates with firestore using onSnapshot', () => {
   const renderMock = jest.fn().mockReturnValue(<div />);
   const documentPath = 'users/1';
 
-  const component = mount(
-    <FirestoreDocument path={documentPath} render={renderMock} />,
-    { context: { firestoreDatabase: firestoreMock, firestoreCache: {} } }
-  );
+  mount(<FirestoreDocument path={documentPath} render={renderMock} />, {
+    context: { firestoreDatabase: firestoreMock, firestoreCache: {} },
+  });
 
   expect(documentMock).toHaveBeenCalledTimes(1);
   expect(documentMock).toHaveBeenCalledWith(documentPath);

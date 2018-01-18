@@ -2,31 +2,51 @@
   "name": "react-firestore",
   "version": "0.0.4",
   "description": "React components to fetch data from firestore using render props",
+  "author": "Andrew Walton",
+  "license": "MIT",
+  "homepage": "https://github.com/green-arrow/react-firestore#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/green-arrow/react-firestore.git"
+  },
+  "bugs": {
+    "url": "https://github.com/green-arrow/react-firestore/issues"
+  },
   "main": "dist/react-firestore.cjs.js",
   "jsnext:main": "dist/react-firestore.esm.js",
   "module": "dist/react-firestore.esm.js",
   "scripts": {
     "build": "kcd-scripts build --bundle --p-react",
+    "lint": "kcd-scripts lint",
     "test": "kcd-scripts test",
+    "test:cover": "kcd-scripts test --coverage",
     "test:build": "kcd-scripts test --no-watch",
     "build-and-test": "npm run build -s && npm run test:build -s",
-    "prepublishOnly": "kcd-scripts validate build-and-test"
+    "validate": "kcd-scripts validate lint,build-and-test,test:cover"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/green-arrow/react-firestore.git"
+  "eslintConfig": {
+    "extends": "./node_modules/kcd-scripts/eslint.js",
+    "rules": {
+      "max-lines": "off",
+      "no-eq-null": "off",
+      "eqeqeq": "off",
+      "react/jsx-indent": "off",
+      "complexity": [
+        "error",
+        12
+      ]
+    }
   },
+  "eslintIgnore": [
+    "node_modules",
+    "coverage",
+    "dist"
+  ],
   "keywords": [
     "react",
     "firestore",
     "firebase"
   ],
-  "author": "Andrew Walton",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/green-arrow/react-firestore/issues"
-  },
-  "homepage": "https://github.com/green-arrow/react-firestore#readme",
   "dependencies": {},
   "peerDependencies": {
     "prop-types": ">=15",

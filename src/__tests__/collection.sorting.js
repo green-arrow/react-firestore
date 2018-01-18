@@ -1,7 +1,6 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React from 'react';
 import { mount } from 'enzyme';
-import { FirestoreProvider, FirestoreCollection } from '../';
+import { FirestoreCollection } from '../';
 import { createMocksForCollection } from './helpers/firestore-utils';
 
 test('sorts by a single field', () => {
@@ -15,7 +14,7 @@ test('sorts by a single field', () => {
   const collectionName = 'users';
   const sortField = 'name';
 
-  const component = mount(
+  mount(
     <FirestoreCollection
       path={collectionName}
       sort={sortField}
@@ -49,7 +48,7 @@ test('sorts by a multiple fields', () => {
   const collectionName = 'users';
   const sort = 'name,joinedDate:desc';
 
-  const component = mount(
+  mount(
     <FirestoreCollection
       path={collectionName}
       sort={sort}

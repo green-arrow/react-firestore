@@ -1,7 +1,6 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React from 'react';
 import { mount } from 'enzyme';
-import { FirestoreProvider, FirestoreCollection } from '../';
+import { FirestoreCollection } from '../';
 import { createMocksForCollection } from './helpers/firestore-utils';
 
 test('initial state set up correctly', () => {
@@ -13,10 +12,9 @@ test('initial state set up correctly', () => {
   const renderMock = jest.fn().mockReturnValue(<div />);
   const collectionName = 'users';
 
-  const component = mount(
-    <FirestoreCollection path={collectionName} render={renderMock} />,
-    { context: { firestoreDatabase: firestoreMock, firestoreCache: {} } }
-  );
+  mount(<FirestoreCollection path={collectionName} render={renderMock} />, {
+    context: { firestoreDatabase: firestoreMock, firestoreCache: {} },
+  });
 
   expect(collectionMock).toHaveBeenCalledTimes(1);
   expect(collectionMock).toHaveBeenCalledWith(collectionName);

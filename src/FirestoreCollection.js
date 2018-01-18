@@ -2,6 +2,17 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 
 class FirestoreCollection extends Component {
+  static propTypes = {
+    path: PropTypes.string.isRequired,
+    sort: PropTypes.string,
+    render: PropTypes.func.isRequired,
+  };
+
+  static contextTypes = {
+    firestoreDatabase: PropTypes.object.isRequired,
+    firestoreCache: PropTypes.object.isRequired,
+  };
+
   state = {
     isLoading: true,
     data: [],
@@ -19,7 +30,7 @@ class FirestoreCollection extends Component {
 
   setupFirestoreListener = props => {
     const { firestoreDatabase } = this.context;
-    const { path, ...queryProps } = this.props;
+    const { path, ...queryProps } = props;
     const collectionRef = firestoreDatabase.collection(path);
     const query = this.buildQuery(collectionRef, queryProps);
 
@@ -61,10 +72,5 @@ class FirestoreCollection extends Component {
     });
   }
 }
-
-FirestoreCollection.contextTypes = {
-  firestoreDatabase: PropTypes.object.isRequired,
-  firestoreCache: PropTypes.object.isRequired,
-};
 
 export default FirestoreCollection;

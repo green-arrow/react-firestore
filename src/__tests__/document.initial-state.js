@@ -1,7 +1,6 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React from 'react';
 import { mount } from 'enzyme';
-import { FirestoreProvider, FirestoreDocument } from '../';
+import { FirestoreDocument } from '../';
 import { createMocksForDocument } from './helpers/firestore-utils';
 
 test('initial state set up correctly', () => {
@@ -13,10 +12,9 @@ test('initial state set up correctly', () => {
   const renderMock = jest.fn().mockReturnValue(<div />);
   const documentPath = 'users/1';
 
-  const component = mount(
-    <FirestoreDocument path={documentPath} render={renderMock} />,
-    { context: { firestoreDatabase: firestoreMock, firestoreCache: {} } }
-  );
+  mount(<FirestoreDocument path={documentPath} render={renderMock} />, {
+    context: { firestoreDatabase: firestoreMock, firestoreCache: {} },
+  });
 
   expect(documentMock).toHaveBeenCalledTimes(1);
   expect(documentMock).toHaveBeenCalledWith(documentPath);

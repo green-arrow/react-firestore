@@ -1,7 +1,6 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React from 'react';
 import { mount } from 'enzyme';
-import { FirestoreProvider, FirestoreCollection } from '../';
+import { FirestoreCollection } from '../';
 import { createMocksForCollection } from './helpers/firestore-utils';
 
 test('integrates with firestore using onSnapshot', () => {
@@ -23,10 +22,9 @@ test('integrates with firestore using onSnapshot', () => {
   const renderMock = jest.fn().mockReturnValue(<div />);
   const collectionName = 'users';
 
-  const component = mount(
-    <FirestoreCollection path={collectionName} render={renderMock} />,
-    { context: { firestoreDatabase: firestoreMock, firestoreCache: {} } }
-  );
+  mount(<FirestoreCollection path={collectionName} render={renderMock} />, {
+    context: { firestoreDatabase: firestoreMock, firestoreCache: {} },
+  });
 
   expect(collectionMock).toHaveBeenCalledTimes(1);
   expect(collectionMock).toHaveBeenCalledWith(collectionName);

@@ -24,7 +24,7 @@ export function createMocksForDocument(doc) {
     const { id, ...data } = doc;
 
     snapshot = {
-      id: doc.id,
+      id,
       data: () => ({ ...data }),
     };
   }

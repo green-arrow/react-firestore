@@ -3,10 +3,11 @@ import PropTypes from 'prop-types';
 import { mount } from 'enzyme';
 import { FirestoreProvider } from '../';
 
-const createChild = (storeKey = 'store') => {
+const createChild = () => {
+  // eslint-disable-next-line react/prefer-stateless-function
   class Child extends Component {
     render() {
-      return <div />;
+      return null;
     }
   }
 
