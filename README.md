@@ -178,7 +178,9 @@ whenever the given document is updated in Firestore.
 <FirestoreDocument
   path="stories/1"
   render={({ isLoading, data }) => {
-    return (
+    return isLoading ? (
+      <Loading />
+    ) : (
       <div>
         <h1>{data.title}</h1>
         <h2>
@@ -202,6 +204,10 @@ The `/` separated path to the Firestore document.
 ##### render
 
 > function({}) | _required_
+
+This is the function where you render whatever you want based on the state of
+the `FirebaseDocument` component. The object provided to the `render` function
+contains the following fields:
 
 | property  | type            | description                                                                                                                                                                                |
 | --------- | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
