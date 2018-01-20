@@ -37,6 +37,10 @@ This will take you through a series of prompts so that your commit message is
 formatted in such a way that [semantic-release][semantic-release] knows whether
 or not to create a new release and how to generate the next version number.
 
+If you're a new contributor or just not comfortable with the command line,
+don't worry about specially formatted commit messages. We can work through
+that when it's time to get your PR merged!
+
 ### opt into git hooks
 
 There are git hooks set up with this project that are automatically installed
