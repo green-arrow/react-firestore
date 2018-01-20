@@ -11,6 +11,7 @@ test('integrates with firestore using onSnapshot', () => {
   const {
     firestoreMock,
     documentMock,
+    snapshot,
     onSnapshotMock,
   } = createMocksForDocument(doc);
   const renderMock = jest.fn().mockReturnValue(<div />);
@@ -28,12 +29,14 @@ test('integrates with firestore using onSnapshot', () => {
     expect.objectContaining({
       isLoading: true,
       data: null,
+      snapshot: null,
     })
   );
   expect(renderMock).toHaveBeenCalledWith(
     expect.objectContaining({
       isLoading: false,
       data: doc,
+      snapshot,
     })
   );
 });

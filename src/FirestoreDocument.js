@@ -15,6 +15,7 @@ class FirestoreDocument extends Component {
   state = {
     isLoading: true,
     data: null,
+    snapshot: null,
   };
 
   componentDidMount() {
@@ -40,18 +41,20 @@ class FirestoreDocument extends Component {
             id: snapshot.id,
             ...snapshot.data(),
           },
+          snapshot,
         });
       }
     });
   };
 
   render() {
-    const { isLoading, data } = this.state;
+    const { isLoading, data, snapshot } = this.state;
     const { render } = this.props;
 
     return render({
       isLoading,
       data,
+      snapshot,
     });
   }
 }

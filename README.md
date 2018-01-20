@@ -171,10 +171,11 @@ This is the function where you render whatever you want based on the state of
 the `FirebaseCollection` component. The object provided to the `render` function
 contains the following fields:
 
-| property  | type       | description                                                                                                                                     |
-| --------- | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| isLoading | boolean    | Loading status for the firebase query. `true` until an initial payload from Firestore is received.                                              |
-| data      | Array<any> | An array containing all of the documents in the collection. Each item will contain an `id` along with the other data contained in the document. |
+| property  | type                     | description                                                                                                                                                                                         |
+| --------- | ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| isLoading | `boolean`                | Loading status for the firebase query. `true` until an initial payload from Firestore is received.                                                                                                  |
+| data      | `Array<any>`             | An array containing all of the documents in the collection. Each item will contain an `id` along with the other data contained in the document.                                                     |
+| snapshot  | `QuerySnapshot` / `null` | The firestore `QuerySnapshot` created to get data for the collection. See [QuerySnapshot docs](https://cloud.google.com/nodejs/docs/reference/firestore/latest/QuerySnapshot) for more information. |
 
 ### `FirestoreDocument`
 
@@ -218,10 +219,11 @@ This is the function where you render whatever you want based on the state of
 the `FirebaseDocument` component. The object provided to the `render` function
 contains the following fields:
 
-| property  | type            | description                                                                                                                                                                                |
-| --------- | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| isLoading | boolean         | Loading status for the firebase query. `true` until an initial payload from Firestore is received.                                                                                         |
-| data      | Object / `null` | The document that resides at the given `path`. Will be `null` until an initial payload is received. The document will contain an `id` along with the other data contained in the document. |
+| property  | type                        | description                                                                                                                                                                                                |
+| --------- | --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| isLoading | `boolean`                   | Loading status for the firebase query. `true` until an initial payload from Firestore is received.                                                                                                         |
+| data      | `Object` / `null`           | The document that resides at the given `path`. Will be `null` until an initial payload is received. The document will contain an `id` along with the other data contained in the document.                 |
+| snapshot  | `DocumentSnapshot` / `null` | The firestore `DocumentSnapshot` created to get data for the document. See [DocumentSnapshot docs](https://cloud.google.com/nodejs/docs/reference/firestore/latest/DocumentSnapshot) for more information. |
 
 [npm]: https://www.npmjs.com/
 [yarn]: https://yarnpkg.com/

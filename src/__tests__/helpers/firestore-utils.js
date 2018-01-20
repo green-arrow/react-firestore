@@ -55,6 +55,7 @@ function createBaseMocks(snapshot) {
     collectionMock,
     documentMock,
     query,
+    snapshot,
     onSnapshotMock,
     unsubscribeMock,
   };
