@@ -134,7 +134,7 @@ Example usage to get a collection and sort by some fields:
         <h1>Stories</h1>
         <ul>
           {data.map(story => (
-            <li>
+            <li key={story.id}>
               {story.title} - {story.authorName}
             </li>
           ))}
