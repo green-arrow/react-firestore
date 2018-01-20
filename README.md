@@ -1,6 +1,7 @@
 [![Build Status][build-badge]][build]
 [![codecov][coverage-badge]][coverage]
 [![MIT License][license-badge]][license]
+[![version][version-badge]][package]
 
 [![size][size-badge]][unpkg-dist]
 [![gzip size][gzip-badge]][unpkg-dist]
@@ -231,6 +232,8 @@ contains the following fields:
 [coverage]: https://codecov.io/github/green-arrow/react-firestore
 [license-badge]: https://img.shields.io/npm/l/downshift.svg?style=flat-square
 [license]: https://github.com/paypal/downshift/blob/master/LICENSE
+[version-badge]: https://img.shields.io/npm/v/downshift.svg?style=flat-square
+[package]: https://www.npmjs.com/package/downshift
 [gzip-badge]: http://img.badgesize.io/https://unpkg.com/react-firestore/dist/react-firestore.umd.min.js?compression=gzip&label=gzip%20size&style=flat-square
 [size-badge]: http://img.badgesize.io/https://unpkg.com/react-firestore/dist/react-firestore.umd.min.js?label=size&style=flat-square
 [unpkg-dist]: https://unpkg.com/react-firestore/dist/
