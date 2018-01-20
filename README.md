@@ -231,7 +231,7 @@ contains the following fields:
 [coverage-badge]: https://img.shields.io/codecov/c/github/green-arrow/react-firestore.svg?style=flat-square
 [coverage]: https://codecov.io/github/green-arrow/react-firestore
 [license-badge]: https://img.shields.io/npm/l/react-firestore.svg?style=flat-square
-[license]: https://github.com/paypal/react-firestore/blob/master/LICENSE
+[license]: https://github.com/green-arrow/react-firestore/blob/master/LICENSE
 [version-badge]: https://img.shields.io/npm/v/react-firestore.svg?style=flat-square
 [package]: https://www.npmjs.com/package/react-firestore
 [gzip-badge]: http://img.badgesize.io/https://unpkg.com/react-firestore/dist/react-firestore.umd.min.js?compression=gzip&label=gzip%20size&style=flat-square
