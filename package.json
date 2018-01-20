@@ -24,6 +24,10 @@
     "build-and-test": "npm run build -s && npm run test:build -s",
     "validate": "kcd-scripts validate lint,build-and-test,test:cover"
   },
+  "files": [
+    "dist",
+    "preact"
+  ],
   "eslintConfig": {
     "extends": "./node_modules/kcd-scripts/eslint.js",
     "rules": {
