@@ -44,6 +44,18 @@ test('integrates with firestore using onSnapshot', () => {
   );
 });
 
+test('does not re-render if no snapshot is returned', () => {
+  const { firestoreMock, onSnapshotMock } = createMocksForCollection();
+  const renderMock = jest.fn().mockReturnValue(<div />);
+
+  mount(<FirestoreCollection path="users" render={renderMock} />, {
+    context: { firestoreDatabase: firestoreMock, firestoreCache: {} },
+  });
+
+  expect(onSnapshotMock).toHaveBeenCalledTimes(1);
+  expect(renderMock).toHaveBeenCalledTimes(1);
+});
+
 test('unsubscribes from firestore when component unmounts', () => {
   const {
     firestoreMock,
@@ -63,4 +75,21 @@ test('unsubscribes from firestore when component unmounts', () => {
   component.unmount();
 
   expect(unsubscribeMock).toHaveBeenCalledTimes(1);
+});
+
+test('does not unsubscribe if no unsubscribe hook exists', () => {
+  const { firestoreMock, unsubscribeMock } = createMocksForCollection();
+  const renderMock = jest.fn().mockReturnValue(<div />);
+
+  const component = mount(
+    <FirestoreCollection path="users" render={renderMock} />,
+    { context: { firestoreDatabase: firestoreMock, firestoreCache: {} } }
+  );
+
+  expect(unsubscribeMock).not.toHaveBeenCalled();
+
+  component.instance().unsubscribe = null;
+  component.unmount();
+
+  expect(unsubscribeMock).not.toHaveBeenCalled();
 });

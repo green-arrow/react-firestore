@@ -58,3 +58,20 @@ test('unsubscribes from firestore when component unmounts', () => {
 
   expect(unsubscribeMock).toHaveBeenCalledTimes(1);
 });
+
+test('does not unsubscribe if no unsubscribe hook exists', () => {
+  const { firestoreMock, unsubscribeMock } = createMocksForDocument();
+  const renderMock = jest.fn().mockReturnValue(<div />);
+
+  const component = mount(
+    <FirestoreDocument path="users/1" render={renderMock} />,
+    { context: { firestoreDatabase: firestoreMock, firestoreCache: {} } }
+  );
+
+  expect(unsubscribeMock).not.toHaveBeenCalled();
+
+  component.instance().unsubscribe = null;
+  component.unmount();
+
+  expect(unsubscribeMock).not.toHaveBeenCalled();
+});

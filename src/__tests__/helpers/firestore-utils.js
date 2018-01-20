@@ -34,17 +34,11 @@ export function createMocksForDocument(doc) {
 
 function createBaseMocks(snapshot) {
   const unsubscribeMock = jest.fn();
-  let onSnapshotMock;
+  const onSnapshotMock = jest.fn(cb => {
+    cb(snapshot);
 
-  if (snapshot) {
-    onSnapshotMock = jest.fn(cb => {
-      cb(snapshot);
-
-      return unsubscribeMock;
-    });
-  } else {
-    onSnapshotMock = jest.fn().mockReturnValue(unsubscribeMock);
-  }
+    return unsubscribeMock;
+  });
 
   const query = { onSnapshot: onSnapshotMock };
 
