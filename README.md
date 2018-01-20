@@ -1,4 +1,11 @@
-[![codecov](https://codecov.io/gh/green-arrow/react-firestore/branch/master/graph/badge.svg)](https://codecov.io/gh/green-arrow/react-firestore)
+[![Build Status][build-badge]][build]
+[![codecov][coverage-badge]][coverage]
+[![MIT License][license-badge]][license]
+
+[![size][size-badge]][unpkg-dist]
+[![gzip size][gzip-badge]][unpkg-dist]
+[![module formats: umd, cjs, and es][module-formats-badge]][unpkg-dist]
+
 # react-firestore 🔥🏪
 
 React components to fetch collections and documents from Firestore
@@ -218,3 +225,13 @@ contains the following fields:
 [npm]: https://www.npmjs.com/
 [yarn]: https://yarnpkg.com/
 [create-react-app]: https://github.com/facebookincubator/create-react-app
+[build-badge]: https://img.shields.io/travis/green-arrow/react-firestore.svg?style=flat-square
+[build]: https://travis-ci.org/green-arrow/react-firestore
+[coverage-badge]: https://img.shields.io/codecov/c/github/green-arrow/react-firestore.svg?style=flat-square
+[coverage]: https://codecov.io/github/green-arrow/react-firestore
+[license-badge]: https://img.shields.io/npm/l/downshift.svg?style=flat-square
+[license]: https://github.com/paypal/downshift/blob/master/LICENSE
+[gzip-badge]: http://img.badgesize.io/https://unpkg.com/react-firestore/dist/react-firestore.umd.min.js?compression=gzip&label=gzip%20size&style=flat-square
+[size-badge]: http://img.badgesize.io/https://unpkg.com/react-firestore/dist/react-firestore.umd.min.js?label=size&style=flat-square
+[unpkg-dist]: https://unpkg.com/react-firestore/dist/
+[module-formats-badge]: https://img.shields.io/badge/module%20formats-umd%2C%20cjs%2C%20es-green.svg?style=flat-square
