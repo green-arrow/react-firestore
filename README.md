@@ -1,3 +1,4 @@
+[![codecov](https://codecov.io/gh/green-arrow/react-firestore/branch/master/graph/badge.svg)](https://codecov.io/gh/green-arrow/react-firestore)
 # react-firestore 🔥🏪
 
 React components to fetch collections and documents from Firestore
