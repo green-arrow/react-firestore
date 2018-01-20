@@ -1,6 +1,6 @@
 {
   "name": "react-firestore",
-  "version": "0.2.0",
+  "version": "0.0.0-semantically-released",
   "description": "React components to fetch data from firestore using render props",
   "author": "Andrew Walton",
   "license": "MIT",
