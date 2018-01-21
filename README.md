@@ -269,6 +269,10 @@ directly to the wrapped component via the `firestore` prop.
 
 ```jsx
 class MyComponent extends Component {
+  state = {
+    story: null
+  };
+
   componentDidMount() {
     const { firestore } = this.props;
 
@@ -279,9 +283,9 @@ class MyComponent extends Component {
 
   render() {
     const { story } = this.state;
-    const storyData = story.data();
+    const storyData = story ? story.data() : null;
 
-    return (
+    return storyData ? (
       <div>
         <h1>{storyData.title}</h1>
         <h2>
@@ -289,6 +293,8 @@ class MyComponent extends Component {
         </h2>
         <p>{storyData.description}</p>
       </div>
+    ) : (
+      <Loading />
     );
   }
 }
