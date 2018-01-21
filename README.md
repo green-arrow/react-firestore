@@ -1,22 +1,3 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-
-* [react-firestore 🔥🏪](#react-firestore-)
-  * [The problem](#the-problem)
-  * [The solution](#the-solution)
-  * [Disclaimer](#disclaimer)
-  * [Table of Contents](#table-of-contents)
-  * [Installation](#installation)
-  * [Usage](#usage)
-    * [`FirestoreProvider`](#firestoreprovider)
-    * [`FirestoreCollection`](#firestorecollection)
-    * [`FirestoreDocument`](#firestoredocument)
-    * [`Firestore`](#firestore)
-    * [`withFirestore`](#withfirestore)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 [![Build Status][build-badge]][build]
 [![codecov][coverage-badge]][coverage]
 [![MIT License][license-badge]][license]
@@ -56,13 +37,19 @@ The API may update frequently.
 
 ## Table of Contents
 
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
 * [Installation](#installation)
 * [Usage](#usage)
-  * [FirestoreProvider](#firestoreprovider)
-  * [FirestoreCollection](#firestorecollection)
-  * [FirestoreDocument](#firestoredocument)
-  * [Firestore](#firestore)
-  * [withFirestore](#withfirestore)
+  * [`FirestoreProvider`](#firestoreprovider)
+  * [`FirestoreCollection`](#firestorecollection)
+  * [`FirestoreDocument`](#firestoredocument)
+  * [`Firestore`](#firestore)
+  * [`withFirestore`](#withfirestore)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Installation
 
