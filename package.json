@@ -1,7 +1,8 @@
 {
   "name": "react-firestore",
   "version": "0.0.0-semantically-released",
-  "description": "React components to fetch data from firestore using render props",
+  "description":
+    "React components to fetch data from firestore using render props",
   "author": "Andrew Walton",
   "license": "MIT",
   "homepage": "https://github.com/green-arrow/react-firestore#readme",
@@ -26,10 +27,7 @@
     "validate": "kcd-scripts validate lint,build-and-test,test:cover",
     "precommit": "kcd-scripts precommit"
   },
-  "files": [
-    "dist",
-    "preact"
-  ],
+  "files": ["dist", "preact"],
   "eslintConfig": {
     "extends": "./node_modules/kcd-scripts/eslint.js",
     "rules": {
@@ -37,23 +35,14 @@
       "no-eq-null": "off",
       "eqeqeq": "off",
       "react/jsx-indent": "off",
-      "complexity": [
-        "error",
-        12
-      ]
+      "complexity": ["error", 12]
     }
   },
-  "eslintIgnore": [
-    "node_modules",
-    "coverage",
-    "dist"
-  ],
-  "keywords": [
-    "react",
-    "firestore",
-    "firebase"
-  ],
-  "dependencies": {},
+  "eslintIgnore": ["node_modules", "coverage", "dist"],
+  "keywords": ["react", "firestore", "firebase"],
+  "dependencies": {
+    "hoist-non-react-statics": "^2.3.1"
+  },
   "peerDependencies": {
     "prop-types": ">=15",
     "react": ">=15"

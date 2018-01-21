@@ -1,3 +1,22 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+* [react-firestore 🔥🏪](#react-firestore-)
+  * [The problem](#the-problem)
+  * [The solution](#the-solution)
+  * [Disclaimer](#disclaimer)
+  * [Table of Contents](#table-of-contents)
+  * [Installation](#installation)
+  * [Usage](#usage)
+    * [`FirestoreProvider`](#firestoreprovider)
+    * [`FirestoreCollection`](#firestorecollection)
+    * [`FirestoreDocument`](#firestoredocument)
+    * [`Firestore`](#firestore)
+    * [`withFirestore`](#withfirestore)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 [![Build Status][build-badge]][build]
 [![codecov][coverage-badge]][coverage]
 [![MIT License][license-badge]][license]
@@ -42,6 +61,8 @@ The API may update frequently.
   * [FirestoreProvider](#firestoreprovider)
   * [FirestoreCollection](#firestorecollection)
   * [FirestoreDocument](#firestoredocument)
+  * [Firestore](#firestore)
+  * [withFirestore](#withfirestore)
 
 ## Installation
 
@@ -95,7 +116,7 @@ ReactDOM.render(
   <FirestoreProvider firebase={firebase}>
     <App />
   </FirestoreProvider>,
-  document.getElementById('root')
+  document.getElementById('root'),
 );
 ```
 
@@ -225,8 +246,88 @@ contains the following fields:
 | data      | `Object` / `null`           | The document that resides at the given `path`. Will be `null` until an initial payload is received. The document will contain an `id` along with the other data contained in the document.                 |
 | snapshot  | `DocumentSnapshot` / `null` | The firestore `DocumentSnapshot` created to get data for the document. See [DocumentSnapshot docs](https://cloud.google.com/nodejs/docs/reference/firestore/latest/DocumentSnapshot) for more information. |
 
+### `Firestore`
+
+This component supplies the firestore database to the function specified
+by the `render` prop. This component can be used if you need more flexibility
+than the `FirestoreCollection` and `FirestoreDocument` components provide,
+or if you would just rather interact directly with the `firestore` object.
+
+```jsx
+<Firestore
+  render={({ firestore }) => {
+    // Do stuff with `firestore`
+    return <div> /* Component markup */ </div>;
+  }}
+/>
+```
+
+#### `Firestore` props
+
+##### render
+
+> function({}) | _required_
+
+This is the function where you render whatever you want using the firestore
+object passed in.
+
+| property  | type     | description                                                                                                                           |
+| --------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| firestore | `Object` | The `Firestore` class from [firestore][firestore]. See the docs for the [Firestore class][firestore-class-docs] for more information. |
+
+### `withFirestore`
+
+This higher-order component can be used to provide the firestore database
+directly to the wrapped component via the `firestore` prop.
+
+```jsx
+class MyComponent extends Component {
+  componentDidMount() {
+    const { firestore } = this.props;
+
+    firestore.doc('stories/1').onSnapshot(snapshot => {
+      this.setState({ story: snapshot });
+    });
+  }
+
+  render() {
+    const { story } = this.state;
+    const storyData = story.data();
+
+    return (
+      <div>
+        <h1>{storyData.title}</h1>
+        <h2>
+          {storyData.authorName} - {storyData.publishedDate}
+        </h2>
+        <p>{storyData.description}</p>
+      </div>
+    );
+  }
+}
+
+export default withFirestore(MyComponent);
+```
+
+#### `Component.WrappedComponent`
+
+The wrapped component is available as a static property called
+`WrappedComponent` on the returned component. This can be used
+for testing the component in isolation, without needing to provide
+context in your tests.
+
+#### Props for returned component
+
+##### wrappedComponentRef
+
+> function | _optional_
+
+A function that will be passed as the `ref` prop to the wrapped component.
+
 [npm]: https://www.npmjs.com/
 [yarn]: https://yarnpkg.com/
+[firestore]: https://npmjs.com/package/firestore
+[firestore-class-docs]: https://cloud.google.com/nodejs/docs/reference/firestore/0.11.x/Firestore
 [create-react-app]: https://github.com/facebookincubator/create-react-app
 [build-badge]: https://img.shields.io/travis/green-arrow/react-firestore.svg?style=flat-square
 [build]: https://travis-ci.org/green-arrow/react-firestore

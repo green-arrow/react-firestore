@@ -1,5 +1,13 @@
+import Firestore from './Firestore';
 import FirestoreProvider from './FirestoreProvider';
 import FirestoreCollection from './FirestoreCollection';
 import FirestoreDocument from './FirestoreDocument';
+import withFirestore from './withFirestore';
 
-export { FirestoreProvider, FirestoreCollection, FirestoreDocument };
+export {
+  Firestore,
+  FirestoreProvider,
+  FirestoreCollection,
+  FirestoreDocument,
+  withFirestore,
+};
