@@ -260,7 +260,7 @@ object passed in.
 
 | property  | type     | description                                                                                                                           |
 | --------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| firestore | `Object` | The `Firestore` class from [firestore][firestore]. See the docs for the [Firestore class][firestore-class-docs] for more information. |
+| firestore | `Object` | The `Firestore` class from [firestore][firestore-package]. See the docs for the [Firestore class][firestore-class-docs] for more information. |
 
 ### `withFirestore`
 
@@ -313,7 +313,7 @@ A function that will be passed as the `ref` prop to the wrapped component.
 
 [npm]: https://www.npmjs.com/
 [yarn]: https://yarnpkg.com/
-[firestore]: https://npmjs.com/package/firestore
+[firestore-package]: https://www.npmjs.com/package/@firebase/firestore
 [firestore-class-docs]: https://cloud.google.com/nodejs/docs/reference/firestore/0.11.x/Firestore
 [create-react-app]: https://github.com/facebookincubator/create-react-app
 [build-badge]: https://img.shields.io/travis/green-arrow/react-firestore.svg?style=flat-square
