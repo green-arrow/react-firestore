@@ -5,6 +5,7 @@ class FirestoreCollection extends Component {
   static propTypes = {
     path: PropTypes.string.isRequired,
     sort: PropTypes.string,
+    limit: PropTypes.number,
     render: PropTypes.func.isRequired,
   };
 
@@ -50,7 +51,7 @@ class FirestoreCollection extends Component {
   };
 
   buildQuery = (collectionRef, queryProps) => {
-    const { sort } = queryProps;
+    const { sort, limit } = queryProps;
     let query = collectionRef;
 
     if (sort) {
@@ -59,6 +60,10 @@ class FirestoreCollection extends Component {
 
         query = query.orderBy(field, order);
       });
+    }
+
+    if (limit) {
+      query = query.limit(limit);
     }
 
     return query;

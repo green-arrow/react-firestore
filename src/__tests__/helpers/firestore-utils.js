@@ -43,6 +43,7 @@ function createBaseMocks(snapshot) {
   const query = { onSnapshot: onSnapshotMock };
 
   query.orderBy = jest.fn().mockReturnValue(query);
+  query.limit = jest.fn().mockReturnValue(query);
 
   const collectionMock = jest.fn().mockReturnValue(query);
   const documentMock = jest

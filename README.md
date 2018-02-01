@@ -171,6 +171,12 @@ Each item in the list can be of the format `fieldName` or `fieldName:sortOrder`.
 The `sortOrder` piece can be either `asc` or `desc`. If just a field name is given,
 `sortOrder` defaults to `asc`.
 
+##### limit
+
+> `number` | defaults to `null`
+
+The maximum number of documents to retrieve from the collection.
+
 ##### render
 
 > function({}) | _required_
