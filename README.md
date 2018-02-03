@@ -89,6 +89,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import firebase from '@firebase/app';
 import '@firebase/firestore';
+import { FirestoreProvider } from "react-firestore";
 
 import App from './App';
 
