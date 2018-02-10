@@ -60,6 +60,8 @@ test('filters the documents returned with a compound filter', () => {
   expect(collectionMock).toHaveBeenCalledTimes(1);
   expect(collectionMock).toHaveBeenCalledWith(collectionName);
   expect(query.where).toHaveBeenCalledTimes(2);
+  expect(query.where).toHaveBeenCalledWith(...filter[0]);
+  expect(query.where).toHaveBeenCalledWith(...filter[1]);
   expect(onSnapshotMock).toHaveBeenCalledTimes(1);
   expect(renderMock).toHaveBeenCalledTimes(1);
   expect(renderMock).toHaveBeenCalledWith(
