@@ -6,6 +6,10 @@ class FirestoreCollection extends Component {
     path: PropTypes.string.isRequired,
     sort: PropTypes.string,
     limit: PropTypes.number,
+    filter: PropTypes.oneOfType([
+      PropTypes.arrayOf(PropTypes.string),
+      PropTypes.arrayOf(PropTypes.array),
+    ]),
     render: PropTypes.func.isRequired,
   };
 
@@ -51,7 +55,7 @@ class FirestoreCollection extends Component {
   };
 
   buildQuery = (collectionRef, queryProps) => {
-    const { sort, limit } = queryProps;
+    const { sort, limit, filter } = queryProps;
     let query = collectionRef;
 
     if (sort) {
@@ -64,6 +68,18 @@ class FirestoreCollection extends Component {
 
     if (limit) {
       query = query.limit(limit);
+    }
+
+    if (filter) {
+      //if filter is array of array, build the compound query
+      if (Array.isArray(filter[0])) {
+        filter.forEach(clause => {
+          query = query.where(...clause);
+        });
+      } else {
+        //build the simple query
+        query = query.where(...filter);
+      }
     }
 
     return query;
