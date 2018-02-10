@@ -178,6 +178,28 @@ The `sortOrder` piece can be either `asc` or `desc`. If just a field name is giv
 
 The maximum number of documents to retrieve from the collection.
 
+##### filter
+
+> `array` or `array of array` | defaults to `null`
+
+Passing in an array of strings creates a simple query to filter the collection by
+```jsx
+<FirestoreCollection
+      path={"users"}
+      filter={['firstName', '==', 'Mike']}
+      render={()=>{/* render stuff*/}}
+    />
+```
+
+Passing in an array of arrays creates a compound query to filter the collection by
+```jsx
+<FirestoreCollection
+      path={"users"}
+      filter={[['firstName', '==', 'Mike'], ['lastName', '==', 'Smith']]}
+      render={()=>{/* render stuff*/}}
+    />
+```
+
 ##### render
 
 > function({}) | _required_
