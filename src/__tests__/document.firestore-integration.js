@@ -144,11 +144,9 @@ describe('when props change', () => {
     expect(unsubscribeMock).toHaveBeenCalledTimes(1);
   });
 
-  test('resets state to inital values', () => {
+  test('resets isLoading state', () => {
     expect(component.state()).toMatchObject({
       isLoading: true,
-      data: null,
-      snapshot: null,
     });
   });
 

@@ -12,13 +12,11 @@ class FirestoreDocument extends Component {
     firestoreCache: PropTypes.object.isRequired,
   };
 
-  static defaultState = {
+  state = {
     isLoading: true,
     data: null,
     snapshot: null,
   };
-
-  state = FirestoreDocument.defaultState;
 
   componentDidMount() {
     this.setupFirestoreListener(this.props);
@@ -32,8 +30,11 @@ class FirestoreDocument extends Component {
 
   componentWillReceiveProps(prevProps) {
     if (prevProps.path !== this.props.path) {
-      this.unsubscribe();
-      this.setState(FirestoreDocument.defaultState, () =>
+      if (this.unsubscribe) {
+        this.unsubscribe();
+      }
+
+      this.setState({ isLoading: true }, () =>
         this.setupFirestoreListener(this.props),
       );
     }
