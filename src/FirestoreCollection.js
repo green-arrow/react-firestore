@@ -1,5 +1,6 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
+import isEqual from 'lodash.isequal';
 
 class FirestoreCollection extends Component {
   static propTypes = {
@@ -29,6 +30,20 @@ class FirestoreCollection extends Component {
   }
 
   componentWillUnmount() {
+    this.handleUnsubscribe();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (!isEqual(nextProps, this.props)) {
+      this.handleUnsubscribe();
+
+      this.setState({ isLoading: true }, () =>
+        this.setupFirestoreListener(this.props),
+      );
+    }
+  }
+
+  handleUnsubscribe() {
     if (this.unsubscribe) {
       this.unsubscribe();
     }
