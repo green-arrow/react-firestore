@@ -23,6 +23,20 @@ class FirestoreDocument extends Component {
   }
 
   componentWillUnmount() {
+    this.handleUnsubscribe();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.path !== this.props.path) {
+      this.handleUnsubscribe();
+
+      this.setState({ isLoading: true }, () =>
+        this.setupFirestoreListener(this.props),
+      );
+    }
+  }
+
+  handleUnsubscribe() {
     if (this.unsubscribe) {
       this.unsubscribe();
     }
