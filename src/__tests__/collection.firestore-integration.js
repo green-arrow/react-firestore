@@ -438,7 +438,7 @@ describe('when componentWillReceiveProps is executed', () => {
           path={collectionName1}
           sort="date"
           limit={5}
-          filter={['name', '==', 'Mike']}
+          filter={[['firstName', '==', 'Mike'], ['lastName', '==', 'Smith']]}
           render={renderMock}
         />,
         {
@@ -447,22 +447,28 @@ describe('when componentWillReceiveProps is executed', () => {
       );
     });
     test('resets isLoading state', () => {
-      resetsIsLoadingState({ filter: [['name', '==', 'Steve']] });
+      resetsIsLoadingState({
+        filter: [['firstName', '==', 'Steve'], ['lastName', '==', 'Jones']],
+      });
     });
 
     test('wires up a new listener', () => {
       wiresUpANewListener(
-        { filter: [['name', '==', 'Steve']] },
+        { filter: [['firstName', '==', 'Steve'], ['lastName', '==', 'Jones']] },
         collectionName1,
       );
     });
 
     test('unsubscribes if an unsubscribe hook exists', () => {
-      unsubscribesActiveListener({ filter: [['name', '==', 'Steve']] });
+      unsubscribesActiveListener({
+        filter: [['firstName', '==', 'Steve'], ['lastName', '==', 'Jones']],
+      });
     });
 
     test('does not unsubscribe if no unsubscribe hook exists', () => {
-      doesNotExecuteUnsubscribe({ filter: [['name', '==', 'Steve']] });
+      doesNotExecuteUnsubscribe({
+        filter: [['firstName', '==', 'Steve'], ['lastName', '==', 'Jones']],
+      });
     });
   });
 });

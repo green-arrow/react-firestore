@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
-import isEqual from 'lodash.isequal';
+import deepEqual from './utils/deepEqual';
 
 class FirestoreCollection extends Component {
   static propTypes = {
@@ -34,7 +34,12 @@ class FirestoreCollection extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (!isEqual(nextProps, this.props)) {
+    if (
+      nextProps.path !== this.props.path ||
+      nextProps.sort !== this.props.sort ||
+      nextProps.limit !== this.props.limit ||
+      !deepEqual(nextProps.filter, this.props.filter)
+    ) {
       this.handleUnsubscribe();
 
       this.setState({ isLoading: true }, () =>
