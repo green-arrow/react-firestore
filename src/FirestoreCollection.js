@@ -11,7 +11,8 @@ class FirestoreCollection extends Component {
       PropTypes.arrayOf(PropTypes.string),
       PropTypes.arrayOf(PropTypes.array),
     ]),
-    render: PropTypes.func.isRequired,
+    children: PropTypes.func,
+    render: PropTypes.func,
   };
 
   static contextTypes = {
@@ -106,14 +107,13 @@ class FirestoreCollection extends Component {
   };
 
   render() {
-    const { isLoading, data, snapshot } = this.state;
-    const { render } = this.props;
+    const { children, render } = this.props;
 
-    return render({
-      isLoading,
-      data,
-      snapshot,
-    });
+    if (render) return render(this.state);
+
+    if (typeof children === 'function') return children(this.state);
+
+    return null;
   }
 }
 
