@@ -206,6 +206,22 @@ Passing in an array of arrays creates a compound query to filter the collection 
 />
 ```
 
+Passing in document references allows you to filter by reference fields:
+
+```jsx
+<FirestoreCollection
+  path={'users'}
+  filter={[
+    'organization',
+    '==',
+    firestore.collection('organizations').doc('foocorp'),
+  ]}
+  render={() => {
+    /* render stuff*/
+  }}
+/>
+```
+
 ##### render
 
 > function({}) | _required_

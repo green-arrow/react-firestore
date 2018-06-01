@@ -8,7 +8,13 @@ class FirestoreCollection extends Component {
     sort: PropTypes.string,
     limit: PropTypes.number,
     filter: PropTypes.oneOfType([
-      PropTypes.arrayOf(PropTypes.string),
+      PropTypes.arrayOf(
+        PropTypes.oneOfType([
+          PropTypes.string,
+          PropTypes.number,
+          PropTypes.object,
+        ]),
+      ),
       PropTypes.arrayOf(PropTypes.array),
     ]),
     children: PropTypes.func,
