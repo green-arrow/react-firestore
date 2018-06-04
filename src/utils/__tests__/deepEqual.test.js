@@ -23,3 +23,32 @@ test('returns true if nested arrays are the same', () => {
 test('returns false if nested arrays are different', () => {
   expect(deepEqual(['a', ['b', ['c']]], ['d', ['e', ['f']]])).toBe(false);
 });
+
+function mockIsEqual(other) {
+  return this.value === other.value;
+}
+test('returns true when isEqual method is available and isEqual returns true', () => {
+  const mockA = {
+    value: 'document/id',
+    isEqual: mockIsEqual,
+  };
+  const mockB = {
+    value: 'document/id',
+    isEqual: mockIsEqual,
+  };
+  expect(mockA === mockB).toBe(false);
+  expect(deepEqual([mockA], [mockB])).toBe(true);
+});
+
+test('returns false when isEqual method is available and isEqual returns false', () => {
+  const mockA = {
+    value: 'document/id',
+    isEqual: mockIsEqual,
+  };
+  const mockC = {
+    value: 'something-different',
+    isEqual: mockIsEqual,
+  };
+  expect(mockA === mockC).toBe(false);
+  expect(deepEqual([mockA], [mockC])).toBe(false);
+});

@@ -18,6 +18,9 @@ export default function deepEqual(a, b) {
 
     return true;
   } else {
+    if (typeof a.isEqual === 'function' && typeof b.isEqual === 'function') {
+      return a.isEqual(b);
+    }
     return a === b;
   }
 }
