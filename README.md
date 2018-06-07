@@ -89,7 +89,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import firebase from '@firebase/app';
 import '@firebase/firestore';
-import { FirestoreProvider } from "react-firestore";
+import { FirestoreProvider } from 'react-firestore';
 
 import App from './App';
 
@@ -183,21 +183,43 @@ The maximum number of documents to retrieve from the collection.
 > `array` or `array of array` | defaults to `null`
 
 Passing in an array of strings creates a simple query to filter the collection by
+
 ```jsx
 <FirestoreCollection
-      path={"users"}
-      filter={['firstName', '==', 'Mike']}
-      render={()=>{/* render stuff*/}}
-    />
+  path={'users'}
+  filter={['firstName', '==', 'Mike']}
+  render={() => {
+    /* render stuff*/
+  }}
+/>
 ```
 
 Passing in an array of arrays creates a compound query to filter the collection by
+
 ```jsx
 <FirestoreCollection
-      path={"users"}
-      filter={[['firstName', '==', 'Mike'], ['lastName', '==', 'Smith']]}
-      render={()=>{/* render stuff*/}}
-    />
+  path={'users'}
+  filter={[['firstName', '==', 'Mike'], ['lastName', '==', 'Smith']]}
+  render={() => {
+    /* render stuff*/
+  }}
+/>
+```
+
+Passing in document references allows you to filter by reference fields:
+
+```jsx
+<FirestoreCollection
+  path={'users'}
+  filter={[
+    'organization',
+    '==',
+    firestore.collection('organizations').doc('foocorp'),
+  ]}
+  render={() => {
+    /* render stuff*/
+  }}
+/>
 ```
 
 ##### render
@@ -287,8 +309,8 @@ or if you would just rather interact directly with the `firestore` object.
 This is the function where you render whatever you want using the firestore
 object passed in.
 
-| property  | type     | description                                                                                                                           |
-| --------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| property  | type     | description                                                                                                                                   |
+| --------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
 | firestore | `Object` | The `Firestore` class from [firestore][firestore-package]. See the docs for the [Firestore class][firestore-class-docs] for more information. |
 
 ### `withFirestore`
@@ -299,7 +321,7 @@ directly to the wrapped component via the `firestore` prop.
 ```jsx
 class MyComponent extends Component {
   state = {
-    story: null
+    story: null,
   };
 
   componentDidMount() {

@@ -71,3 +71,25 @@ test('filters the documents returned with a compound filter', () => {
     }),
   );
 });
+
+test('filter accepts objects and numbers', () => {
+  const { firestoreMock } = createMocksForCollection();
+  const renderMock = jest.fn().mockReturnValue(<div />);
+  const collectionName = 'users';
+  mount(
+    <FirestoreCollection
+      path={collectionName}
+      filter={['number', '==', 5]}
+      render={renderMock}
+    />,
+    { context: { firestoreDatabase: firestoreMock, firestoreCache: {} } },
+  );
+  mount(
+    <FirestoreCollection
+      path={collectionName}
+      filter={['ref', '==', firestoreMock.doc('things/foobar')]}
+      render={renderMock}
+    />,
+    { context: { firestoreDatabase: firestoreMock, firestoreCache: {} } },
+  );
+});
