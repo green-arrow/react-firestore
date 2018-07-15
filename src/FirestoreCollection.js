@@ -29,6 +29,7 @@ class FirestoreCollection extends Component {
   state = {
     isLoading: true,
     data: [],
+    error: null,
     snapshot: null,
   };
 
@@ -67,17 +68,32 @@ class FirestoreCollection extends Component {
     const collectionRef = firestoreDatabase.collection(path);
     const query = this.buildQuery(collectionRef, queryProps);
 
-    this.unsubscribe = query.onSnapshot(snapshot => {
-      if (snapshot) {
-        this.setState({
-          isLoading: false,
-          data: snapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data(),
-          })),
-          snapshot,
-        });
-      }
+    this.unsubscribe = query.onSnapshot(
+      this.handleOnSnapshotSuccess,
+      this.handleOnSnapshotError,
+    );
+  };
+
+  handleOnSnapshotSuccess = snapshot => {
+    if (snapshot) {
+      this.setState({
+        isLoading: false,
+        data: snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+        })),
+        error: null,
+        snapshot,
+      });
+    }
+  };
+
+  handleOnSnapshotError = error => {
+    this.setState({
+      isLoading: false,
+      data: [],
+      error,
+      snapshot: null,
     });
   };
 
