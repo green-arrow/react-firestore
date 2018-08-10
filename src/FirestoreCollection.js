@@ -1,5 +1,6 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
+import deepEqual from './utils/deepEqual';
 
 class FirestoreCollection extends Component {
   static propTypes = {
@@ -7,12 +8,19 @@ class FirestoreCollection extends Component {
     sort: PropTypes.string,
     limit: PropTypes.number,
     filter: PropTypes.oneOfType([
-      PropTypes.arrayOf(PropTypes.string),
+      PropTypes.arrayOf(
+        PropTypes.oneOfType([
+          PropTypes.string,
+          PropTypes.number,
+          PropTypes.object,
+        ]),
+      ),
       PropTypes.arrayOf(PropTypes.array),
     ]),
     startAfter: PropTypes.any,
     startAt: PropTypes.any,
-    render: PropTypes.func.isRequired,
+    children: PropTypes.func,
+    render: PropTypes.func,
   };
 
   static contextTypes = {
@@ -31,6 +39,25 @@ class FirestoreCollection extends Component {
   }
 
   componentWillUnmount() {
+    this.handleUnsubscribe();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (
+      nextProps.path !== this.props.path ||
+      nextProps.sort !== this.props.sort ||
+      nextProps.limit !== this.props.limit ||
+      !deepEqual(nextProps.filter, this.props.filter)
+    ) {
+      this.handleUnsubscribe();
+
+      this.setState({ isLoading: true }, () =>
+        this.setupFirestoreListener(this.props),
+      );
+    }
+  }
+
+  handleUnsubscribe() {
     if (this.unsubscribe) {
       this.unsubscribe();
     }
@@ -96,14 +123,13 @@ class FirestoreCollection extends Component {
   };
 
   render() {
-    const { isLoading, data, snapshot } = this.state;
-    const { render } = this.props;
+    const { children, render } = this.props;
 
-    return render({
-      isLoading,
-      data,
-      snapshot,
-    });
+    if (render) return render(this.state);
+
+    if (typeof children === 'function') return children(this.state);
+
+    return null;
   }
 }
 

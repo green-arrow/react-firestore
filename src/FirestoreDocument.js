@@ -4,7 +4,8 @@ import PropTypes from 'prop-types';
 class FirestoreDocument extends Component {
   static propTypes = {
     path: PropTypes.string.isRequired,
-    render: PropTypes.func.isRequired,
+    children: PropTypes.func,
+    render: PropTypes.func,
   };
 
   static contextTypes = {
@@ -23,6 +24,20 @@ class FirestoreDocument extends Component {
   }
 
   componentWillUnmount() {
+    this.handleUnsubscribe();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.path !== this.props.path) {
+      this.handleUnsubscribe();
+
+      this.setState({ isLoading: true }, () =>
+        this.setupFirestoreListener(this.props),
+      );
+    }
+  }
+
+  handleUnsubscribe() {
     if (this.unsubscribe) {
       this.unsubscribe();
     }
@@ -48,14 +63,13 @@ class FirestoreDocument extends Component {
   };
 
   render() {
-    const { isLoading, data, snapshot } = this.state;
-    const { render } = this.props;
+    const { children, render } = this.props;
 
-    return render({
-      isLoading,
-      data,
-      snapshot,
-    });
+    if (render) return render(this.state);
+
+    if (typeof children === 'function') return children(this.state);
+
+    return null;
   }
 }
 

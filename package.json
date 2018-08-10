@@ -25,7 +25,8 @@
     "test:build": "kcd-scripts test --no-watch",
     "build-and-test": "npm run build -s && npm run test:build -s",
     "validate": "kcd-scripts validate lint,build-and-test,test:cover",
-    "precommit": "kcd-scripts precommit"
+    "precommit": "kcd-scripts precommit",
+    "prepare": "npm run build"
   },
   "files": ["dist", "preact"],
   "eslintConfig": {
