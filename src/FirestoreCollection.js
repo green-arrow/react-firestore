@@ -10,6 +10,8 @@ class FirestoreCollection extends Component {
       PropTypes.arrayOf(PropTypes.string),
       PropTypes.arrayOf(PropTypes.array),
     ]),
+    startAfter: PropTypes.any,
+    startAt: PropTypes.any,
     render: PropTypes.func.isRequired,
   };
 
@@ -55,7 +57,7 @@ class FirestoreCollection extends Component {
   };
 
   buildQuery = (collectionRef, queryProps) => {
-    const { sort, limit, filter } = queryProps;
+    const { sort, limit, filter, startAfter, startAt } = queryProps;
     let query = collectionRef;
 
     if (sort) {
@@ -80,6 +82,14 @@ class FirestoreCollection extends Component {
         //build the simple query
         query = query.where(...filter);
       }
+    }
+
+    if (startAfter) {
+      query = query.startAfter(startAfter);
+    }
+
+    if (startAt) {
+      query = query.startAt(startAt);
     }
 
     return query;
