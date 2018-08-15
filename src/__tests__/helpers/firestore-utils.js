@@ -1,4 +1,4 @@
-export function createMocksForCollection(documentCollection) {
+export function createMocksForCollection(documentCollection, options = {}) {
   let snapshot;
 
   if (documentCollection) {
@@ -14,10 +14,10 @@ export function createMocksForCollection(documentCollection) {
     };
   }
 
-  return createBaseMocks(snapshot);
+  return createBaseMocks(snapshot, options);
 }
 
-export function createMocksForDocument(doc) {
+export function createMocksForDocument(doc, options = {}) {
   let snapshot;
 
   if (doc) {
@@ -29,13 +29,17 @@ export function createMocksForDocument(doc) {
     };
   }
 
-  return createBaseMocks(snapshot);
+  return createBaseMocks(snapshot, options);
 }
 
-function createBaseMocks(snapshot) {
+function createBaseMocks(snapshot, options) {
   const unsubscribeMock = jest.fn();
-  const onSnapshotMock = jest.fn(cb => {
-    cb(snapshot);
+  const onSnapshotMock = jest.fn((successCb, errorCb) => {
+    if (options && options.onSnapshotMockError) {
+      errorCb(new Error('Error with snapshot'));
+    } else {
+      successCb(snapshot);
+    }
 
     return unsubscribeMock;
   });

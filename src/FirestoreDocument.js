@@ -16,6 +16,7 @@ class FirestoreDocument extends Component {
   state = {
     isLoading: true,
     data: null,
+    error: null,
     snapshot: null,
   };
 
@@ -48,18 +49,33 @@ class FirestoreDocument extends Component {
     const { path } = props;
     const documentRef = firestoreDatabase.doc(path);
 
-    this.unsubscribe = documentRef.onSnapshot(snapshot => {
-      if (snapshot) {
-        this.setState({
-          isLoading: false,
-          data: {
-            id: snapshot.id,
-            ...snapshot.data(),
-          },
-          snapshot,
-        });
-      }
+    this.unsubscribe = documentRef.onSnapshot(
+      this.handleOnSnapshotSuccess,
+      this.handleOnSnapshotError,
+    );
+  };
+
+  handleOnSnapshotError = error => {
+    this.setState({
+      isLoading: false,
+      error,
+      data: null,
+      snapshot: null,
     });
+  };
+
+  handleOnSnapshotSuccess = snapshot => {
+    if (snapshot) {
+      this.setState({
+        isLoading: false,
+        data: {
+          id: snapshot.id,
+          ...snapshot.data(),
+        },
+        error: null,
+        snapshot,
+      });
+    }
   };
 
   render() {
