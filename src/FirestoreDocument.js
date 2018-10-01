@@ -66,15 +66,24 @@ class FirestoreDocument extends Component {
 
   handleOnSnapshotSuccess = snapshot => {
     if (snapshot) {
-      this.setState({
+      const newState = {
         isLoading: false,
-        data: {
-          id: snapshot.id,
-          ...snapshot.data(),
-        },
         error: null,
         snapshot,
-      });
+      };
+
+      try {
+        const documentData = snapshot.data();
+
+        newState.data = {
+          id: snapshot.id,
+          ...documentData,
+        };
+      } catch (error) {
+        newState.error = error;
+      }
+
+      this.setState(newState);
     }
   };
 

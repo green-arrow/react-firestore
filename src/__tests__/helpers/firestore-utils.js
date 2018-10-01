@@ -25,7 +25,13 @@ export function createMocksForDocument(doc, options = {}) {
 
     snapshot = {
       id,
-      data: () => ({ ...data }),
+      data: () => {
+        if (options.onDataMockError) {
+          throw new Error('Error retrieving data');
+        } else {
+          return { ...data };
+        }
+      },
     };
   }
 
