@@ -19,7 +19,7 @@ export default class FirestoreProvider extends Component {
     const { firebase } = props;
 
     this.state = {
-      firestoreDatabase: firebase.firestore(),
+      firestoreDatabase: firebase.firestore({timestampsInSnapshots: true}),
       firestoreCache: new FirestoreCache(),
     };
   }
