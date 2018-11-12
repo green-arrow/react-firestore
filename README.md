@@ -84,6 +84,7 @@ At the top level of your app, configure `firebase` and render the
 If you're using [create-react-app][create-react-app], your `index.js`
 file would look something like this:
 
+
 ```jsx
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -107,6 +108,11 @@ ReactDOM.render(
   document.getElementById('root'),
 );
 ```
+
+_Important: Starting with Firebase v5.5.0 timestamp objects stored in Firestore get returned as Firebase
+Timestamp objects instead of regular Date() objects. To make your app compatible with this
+change, add the `useTimestampsInSnapshots` to the FirestoreProvider element. If you dont do this
+your app might break. For more information visit [the Firebase refrence documentation][https://firebase.google.com/docs/reference/js/firebase.firestore.Timestamp]._
 
 _Note: The reason for the separate imports for `@firebase/app` and `@firebase/firestore`
 is because `firestore` is not included in the default `firebase` wrapper package. See
