@@ -6,8 +6,11 @@ export default class FirestoreProvider extends Component {
   static propTypes = {
     firebase: PropTypes.object.isRequired,
     children: PropTypes.node.isRequired,
-    useTimestampsInSnapshots: PropTypes.bool.isRequired,
   };
+
+  static defaultProps = {
+    useTimestampsInSnapshots: false
+  }
 
   static childContextTypes = {
     firestoreDatabase: PropTypes.object.isRequired,
