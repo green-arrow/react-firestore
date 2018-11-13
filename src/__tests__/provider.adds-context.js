@@ -22,6 +22,7 @@ const createChild = () => {
 test('database and cache are added to child context', () => {
   const Child = createChild();
   const firestore = {};
+  firestore.settings = jest.fn().mockReturnValue(firestore);
   const firebase = {
     firestore: jest.fn().mockReturnValueOnce(firestore),
   };
@@ -29,7 +30,7 @@ test('database and cache are added to child context', () => {
   const component = mount(
     <FirestoreProvider firebase={firebase}>
       <Child />
-    </FirestoreProvider>
+    </FirestoreProvider>,
   );
   const child = component.find('Child');
 

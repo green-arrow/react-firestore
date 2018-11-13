@@ -60,7 +60,11 @@ function createBaseMocks(snapshot, options) {
   const documentMock = jest
     .fn()
     .mockReturnValue({ onSnapshot: onSnapshotMock });
-  const firestoreMock = { collection: collectionMock, doc: documentMock };
+  const firestoreMock = {
+    settings: jest.fn(),
+    collection: collectionMock,
+    doc: documentMock,
+  };
 
   return {
     firestoreMock,
