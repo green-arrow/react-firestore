@@ -23,9 +23,11 @@ export default class FirestoreProvider extends Component {
 
     const { firebase, useTimestampsInSnapshots } = props;
     const settings = { timestampsInSnapshots: useTimestampsInSnapshots };
+    const firestore = firebase.firestore();
+    firestore.settings(settings);
 
     this.state = {
-      firestoreDatabase: firebase.firestore().settings(settings),
+      firestoreDatabase: firestore,
       firestoreCache: new FirestoreCache(),
     };
   }
