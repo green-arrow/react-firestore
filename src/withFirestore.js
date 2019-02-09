@@ -8,7 +8,7 @@ const withFirestore = Component => {
     <FirestoreContext.Consumer>
       {value => {
         if (!value) {
-          return null;
+          throw new Error('FirestoreProvider is missing');
         }
         const { firestoreDatabase } = value;
         return (

@@ -20,3 +20,12 @@ test('injects component with firestore database', () => {
     {},
   );
 });
+
+test('throws an error when the FirestoreProvider is missing', () => {
+  const mockFunctionalComponent = jest.fn().mockReturnValue(<div />);
+  const Component = withFirestore(mockFunctionalComponent);
+
+  expect(() => mount(<Component />)).toThrowError(
+    'FirestoreProvider is missing',
+  );
+});
