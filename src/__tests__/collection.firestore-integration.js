@@ -1,6 +1,6 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import { FirestoreCollection } from '../';
+import { FirestoreCollection, FirestoreProvider } from '../';
 import { createMocksForCollection } from './helpers/firestore-utils';
 
 test('integrates with firestore using onSnapshot', () => {
@@ -15,7 +15,7 @@ test('integrates with firestore using onSnapshot', () => {
     },
   ];
   const {
-    firestoreMock,
+    firebaseMock,
     collectionMock,
     snapshot,
     onSnapshotMock,
@@ -23,9 +23,11 @@ test('integrates with firestore using onSnapshot', () => {
   const renderMock = jest.fn().mockReturnValue(<div />);
   const collectionName = 'users';
 
-  mount(<FirestoreCollection path={collectionName} render={renderMock} />, {
-    context: { firestoreDatabase: firestoreMock, firestoreCache: {} },
-  });
+  mount(
+    <FirestoreProvider firebase={firebaseMock}>
+      <FirestoreCollection path={collectionName} render={renderMock} />
+    </FirestoreProvider>,
+  );
 
   expect(collectionMock).toHaveBeenCalledTimes(1);
   expect(collectionMock).toHaveBeenCalledWith(collectionName);
@@ -48,12 +50,14 @@ test('integrates with firestore using onSnapshot', () => {
 });
 
 test('does not re-render if no snapshot is returned', () => {
-  const { firestoreMock, onSnapshotMock } = createMocksForCollection();
+  const { firebaseMock, onSnapshotMock } = createMocksForCollection();
   const renderMock = jest.fn().mockReturnValue(<div />);
 
-  mount(<FirestoreCollection path="users" render={renderMock} />, {
-    context: { firestoreDatabase: firestoreMock, firestoreCache: {} },
-  });
+  mount(
+    <FirestoreProvider firebase={firebaseMock}>
+      <FirestoreCollection path="users" render={renderMock} />
+    </FirestoreProvider>,
+  );
 
   expect(onSnapshotMock).toHaveBeenCalledTimes(1);
   expect(renderMock).toHaveBeenCalledTimes(1);
@@ -61,15 +65,16 @@ test('does not re-render if no snapshot is returned', () => {
 
 test('unsubscribes from firestore when component unmounts', () => {
   const {
-    firestoreMock,
+    firebaseMock,
     onSnapshotMock,
     unsubscribeMock,
   } = createMocksForCollection();
   const renderMock = jest.fn().mockReturnValue(<div />);
 
   const component = mount(
-    <FirestoreCollection path="users" render={renderMock} />,
-    { context: { firestoreDatabase: firestoreMock, firestoreCache: {} } },
+    <FirestoreProvider firebase={firebaseMock}>
+      <FirestoreCollection path="users" render={renderMock} />
+    </FirestoreProvider>,
   );
 
   expect(onSnapshotMock).toHaveBeenCalledTimes(1);
@@ -81,18 +86,20 @@ test('unsubscribes from firestore when component unmounts', () => {
 });
 
 test('does not unsubscribe if no unsubscribe hook exists', () => {
-  const { firestoreMock, unsubscribeMock } = createMocksForCollection();
+  const { firebaseMock, unsubscribeMock } = createMocksForCollection();
   const renderMock = jest.fn().mockReturnValue(<div />);
 
-  const component = mount(
-    <FirestoreCollection path="users" render={renderMock} />,
-    { context: { firestoreDatabase: firestoreMock, firestoreCache: {} } },
+  const wrapper = mount(
+    <FirestoreProvider firebase={firebaseMock}>
+      <FirestoreCollection path="users" render={renderMock} />
+    </FirestoreProvider>,
   );
+  const component = wrapper.find(FirestoreCollection).children(0);
 
   expect(unsubscribeMock).not.toHaveBeenCalled();
 
   component.instance().unsubscribe = null;
-  component.unmount();
+  wrapper.unmount();
 
   expect(unsubscribeMock).not.toHaveBeenCalled();
 });
@@ -109,7 +116,7 @@ describe('when componentWillReceiveProps is executed', () => {
     },
   ];
   const {
-    firestoreMock,
+    firebaseMock,
     collectionMock,
     snapshot,
     onSnapshotMock,
@@ -118,10 +125,16 @@ describe('when componentWillReceiveProps is executed', () => {
   const renderMock = jest.fn().mockReturnValue(<div />);
   const collectionName1 = 'users';
   const collectionName2 = 'posts';
-  let component = null;
+  // eslint-disable-next-line react/prop-types
+  const Wrapper = props => (
+    <FirestoreProvider firebase={firebaseMock}>
+      <FirestoreCollection {...props} />
+    </FirestoreProvider>
+  );
+  let wrapper = null;
 
   const resetsIsLoadingState = newProp => {
-    component.setProps(newProp);
+    wrapper.setProps(newProp);
 
     expect(renderMock).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -131,7 +144,7 @@ describe('when componentWillReceiveProps is executed', () => {
   };
 
   const wiresUpANewListener = (newProp, expectedCollection) => {
-    component.setProps(newProp);
+    wrapper.setProps(newProp);
 
     expect(collectionMock).toHaveBeenCalledTimes(2);
     expect(collectionMock).toHaveBeenCalledWith(expectedCollection);
@@ -139,13 +152,13 @@ describe('when componentWillReceiveProps is executed', () => {
   };
 
   const unsubscribesActiveListener = newProp => {
-    component.setProps(newProp);
+    wrapper.setProps(newProp);
 
     expect(unsubscribeMock).toHaveBeenCalledTimes(1);
   };
 
   const doesNotExecuteUnsubscribe = newProp => {
-    component.setProps(newProp);
+    wrapper.setProps(newProp);
 
     expect(unsubscribeMock).toHaveBeenCalledTimes(1);
   };
@@ -154,19 +167,16 @@ describe('when componentWillReceiveProps is executed', () => {
 
   describe('when existing "path" prop is identical to incoming "path" prop', () => {
     beforeEach(() => {
-      component = mount(
-        <FirestoreCollection
+      wrapper = mount(
+        <Wrapper
           path={collectionName1}
           sort="date"
           limit={5}
           filter={['name', '==', 'Mike']}
           render={renderMock}
         />,
-        {
-          context: { firestoreDatabase: firestoreMock, firestoreCache: {} },
-        },
       );
-      component.setProps({ path: collectionName1 });
+      wrapper.setProps({ path: collectionName1 });
     });
 
     test('does not change isLoading state', () => {
@@ -200,19 +210,16 @@ describe('when componentWillReceiveProps is executed', () => {
 
   describe('when existing "sort" prop is identical to incoming "sort" prop', () => {
     beforeEach(() => {
-      component = mount(
-        <FirestoreCollection
+      wrapper = mount(
+        <Wrapper
           path={collectionName1}
           sort="date"
           limit={5}
           filter={['name', '==', 'Mike']}
           render={renderMock}
         />,
-        {
-          context: { firestoreDatabase: firestoreMock, firestoreCache: {} },
-        },
       );
-      component.setProps({ sort: 'date' });
+      wrapper.setProps({ sort: 'date' });
     });
 
     test('does not change isLoading state', () => {
@@ -246,19 +253,16 @@ describe('when componentWillReceiveProps is executed', () => {
 
   describe('when existing "limit" prop is identical to incoming "limit" prop', () => {
     beforeEach(() => {
-      component = mount(
-        <FirestoreCollection
+      wrapper = mount(
+        <Wrapper
           path={collectionName1}
           sort="date"
           limit={5}
           filter={['name', '==', 'Mike']}
           render={renderMock}
         />,
-        {
-          context: { firestoreDatabase: firestoreMock, firestoreCache: {} },
-        },
       );
-      component.setProps({ limit: 5 });
+      wrapper.setProps({ limit: 5 });
     });
     test('does not change isLoading state', () => {
       expect(renderMock).toHaveBeenCalledTimes(3);
@@ -291,19 +295,16 @@ describe('when componentWillReceiveProps is executed', () => {
 
   describe('when existing "filter" prop is identical to incoming "filter" prop', () => {
     beforeEach(() => {
-      component = mount(
-        <FirestoreCollection
+      wrapper = mount(
+        <Wrapper
           path={collectionName1}
           sort="date"
           limit={5}
           filter={['name', '==', 'Mike']}
           render={renderMock}
         />,
-        {
-          context: { firestoreDatabase: firestoreMock, firestoreCache: {} },
-        },
       );
-      component.setProps({ filter: ['name', '==', 'Mike'] });
+      wrapper.setProps({ filter: ['name', '==', 'Mike'] });
     });
 
     test('does not change isLoading state', () => {
@@ -337,17 +338,14 @@ describe('when componentWillReceiveProps is executed', () => {
 
   describe('when existing "path" prop is different than incoming "path" prop', () => {
     beforeEach(() => {
-      component = mount(
-        <FirestoreCollection
+      wrapper = mount(
+        <Wrapper
           path={collectionName1}
           sort="date"
           limit={5}
           filter={['name', '==', 'Mike']}
           render={renderMock}
         />,
-        {
-          context: { firestoreDatabase: firestoreMock, firestoreCache: {} },
-        },
       );
     });
     test('resets isLoading state', () => {
@@ -369,17 +367,14 @@ describe('when componentWillReceiveProps is executed', () => {
 
   describe('when existing "sort" prop is different than incoming "sort" prop', () => {
     beforeEach(() => {
-      component = mount(
-        <FirestoreCollection
+      wrapper = mount(
+        <Wrapper
           path={collectionName1}
           sort="date"
           limit={5}
           filter={['name', '==', 'Mike']}
           render={renderMock}
         />,
-        {
-          context: { firestoreDatabase: firestoreMock, firestoreCache: {} },
-        },
       );
     });
     test('resets isLoading state', () => {
@@ -401,17 +396,14 @@ describe('when componentWillReceiveProps is executed', () => {
 
   describe('when existing "limit" prop is different than incoming "limit" prop', () => {
     beforeEach(() => {
-      component = mount(
-        <FirestoreCollection
+      wrapper = mount(
+        <Wrapper
           path={collectionName1}
           sort="date"
           limit={5}
           filter={['name', '==', 'Mike']}
           render={renderMock}
         />,
-        {
-          context: { firestoreDatabase: firestoreMock, firestoreCache: {} },
-        },
       );
     });
     test('resets isLoading state', () => {
@@ -433,17 +425,14 @@ describe('when componentWillReceiveProps is executed', () => {
 
   describe('when existing "filter" prop is different than incoming "filter" prop', () => {
     beforeEach(() => {
-      component = mount(
-        <FirestoreCollection
+      wrapper = mount(
+        <Wrapper
           path={collectionName1}
           sort="date"
           limit={5}
           filter={[['firstName', '==', 'Mike'], ['lastName', '==', 'Smith']]}
           render={renderMock}
         />,
-        {
-          context: { firestoreDatabase: firestoreMock, firestoreCache: {} },
-        },
       );
     });
     test('resets isLoading state', () => {

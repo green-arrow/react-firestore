@@ -1,7 +1,8 @@
 {
   "name": "react-firestore",
   "version": "0.0.0-semantically-released",
-  "description": "React components to fetch data from firestore using render props",
+  "description":
+    "React components to fetch data from firestore using render props",
   "author": "Andrew Walton",
   "license": "MIT",
   "homepage": "https://github.com/green-arrow/react-firestore#readme",
@@ -27,10 +28,7 @@
     "precommit": "kcd-scripts precommit",
     "prepare": "npm run build"
   },
-  "files": [
-    "dist",
-    "preact"
-  ],
+  "files": ["dist", "preact"],
   "eslintConfig": {
     "extends": "./node_modules/kcd-scripts/eslint.js",
     "rules": {
@@ -38,22 +36,11 @@
       "no-eq-null": "off",
       "eqeqeq": "off",
       "react/jsx-indent": "off",
-      "complexity": [
-        "error",
-        12
-      ]
+      "complexity": ["error", 12]
     }
   },
-  "eslintIgnore": [
-    "node_modules",
-    "coverage",
-    "dist"
-  ],
-  "keywords": [
-    "react",
-    "firestore",
-    "firebase"
-  ],
+  "eslintIgnore": ["node_modules", "coverage", "dist"],
+  "keywords": ["react", "firestore", "firebase"],
   "dependencies": {
     "hoist-non-react-statics": "^2.3.1"
   },
@@ -64,14 +51,14 @@
   "devDependencies": {
     "commitizen": "^2.9.6",
     "cz-conventional-changelog": "^2.1.0",
-    "enzyme": "^3.3.0",
-    "enzyme-adapter-react-16": "^1.1.1",
+    "enzyme": "^3.8.0",
+    "enzyme-adapter-react-16": "^1.9.1",
     "kcd-scripts": "^0.32.1",
     "preact": "^8.2.7",
     "prop-types": "^15.6.0",
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0",
-    "react-test-renderer": "^16.2.0"
+    "react": "^16.8.1",
+    "react-dom": "^16.8.1",
+    "react-test-renderer": "^16.8.1"
   },
   "config": {
     "commitizen": {

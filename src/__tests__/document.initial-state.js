@@ -1,20 +1,22 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import { FirestoreDocument } from '../';
+import { FirestoreDocument, FirestoreProvider } from '../';
 import { createMocksForDocument } from './helpers/firestore-utils';
 
 test('initial state set up correctly', () => {
   const {
-    firestoreMock,
+    firebaseMock,
     documentMock,
     onSnapshotMock,
   } = createMocksForDocument();
   const renderMock = jest.fn().mockReturnValue(<div />);
   const documentPath = 'users/1';
 
-  mount(<FirestoreDocument path={documentPath} render={renderMock} />, {
-    context: { firestoreDatabase: firestoreMock, firestoreCache: {} },
-  });
+  mount(
+    <FirestoreProvider firebase={firebaseMock}>
+      <FirestoreDocument path={documentPath} render={renderMock} />
+    </FirestoreProvider>,
+  );
 
   expect(documentMock).toHaveBeenCalledTimes(1);
   expect(documentMock).toHaveBeenCalledWith(documentPath);
@@ -30,7 +32,7 @@ test('initial state set up correctly', () => {
 
 test('renders child prop', () => {
   const {
-    firestoreMock,
+    firebaseMock,
     documentMock,
     onSnapshotMock,
   } = createMocksForDocument();
@@ -38,10 +40,9 @@ test('renders child prop', () => {
   const documentPath = 'users/1';
 
   mount(
-    <FirestoreDocument path={documentPath}>{renderMock}</FirestoreDocument>,
-    {
-      context: { firestoreDatabase: firestoreMock, firestoreCache: {} },
-    },
+    <FirestoreProvider firebase={firebaseMock}>
+      <FirestoreDocument path={documentPath}>{renderMock}</FirestoreDocument>,
+    </FirestoreProvider>,
   );
 
   expect(documentMock).toHaveBeenCalledTimes(1);
@@ -58,15 +59,17 @@ test('renders child prop', () => {
 
 test('renders nothing if passed no render prop or children', () => {
   const {
-    firestoreMock,
+    firebaseMock,
     documentMock,
     onSnapshotMock,
   } = createMocksForDocument();
   const documentPath = 'users/1';
 
-  mount(<FirestoreDocument path={documentPath} />, {
-    context: { firestoreDatabase: firestoreMock, firestoreCache: {} },
-  });
+  mount(
+    <FirestoreProvider firebase={firebaseMock}>
+      <FirestoreDocument path={documentPath} />
+    </FirestoreProvider>,
+  );
 
   expect(documentMock).toHaveBeenCalledTimes(1);
   expect(documentMock).toHaveBeenCalledWith(documentPath);

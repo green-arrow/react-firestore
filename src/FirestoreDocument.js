@@ -1,16 +1,13 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
+import withFirestore from './withFirestore';
 
 class FirestoreDocument extends Component {
   static propTypes = {
     path: PropTypes.string.isRequired,
     children: PropTypes.func,
     render: PropTypes.func,
-  };
-
-  static contextTypes = {
-    firestoreDatabase: PropTypes.object.isRequired,
-    firestoreCache: PropTypes.object.isRequired,
+    firestore: PropTypes.object.isRequired,
   };
 
   state = {
@@ -45,9 +42,9 @@ class FirestoreDocument extends Component {
   }
 
   setupFirestoreListener = props => {
-    const { firestoreDatabase } = this.context;
+    const { firestore } = props;
     const { path } = props;
-    const documentRef = firestoreDatabase.doc(path);
+    const documentRef = firestore.doc(path);
 
     this.unsubscribe = documentRef.onSnapshot(
       this.handleOnSnapshotSuccess,
@@ -98,4 +95,4 @@ class FirestoreDocument extends Component {
   }
 }
 
-export default FirestoreDocument;
+export default withFirestore(FirestoreDocument);

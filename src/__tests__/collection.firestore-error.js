@@ -1,12 +1,12 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import { FirestoreCollection } from '../';
+import { FirestoreCollection, FirestoreProvider } from '../';
 import { createMocksForCollection } from './helpers/firestore-utils';
 
 test('should handle error getting snapshot', () => {
   const options = { onSnapshotMockError: true };
   const {
-    firestoreMock,
+    firebaseMock,
     collectionMock,
     onSnapshotMock,
   } = createMocksForCollection(null, options);
@@ -14,9 +14,11 @@ test('should handle error getting snapshot', () => {
   const collectionName = 'error';
 
   const wrapper = mount(
-    <FirestoreCollection path={collectionName} render={renderMock} />,
-    { context: { firestoreDatabase: firestoreMock, firestoreCache: {} } },
+    <FirestoreProvider firebase={firebaseMock}>
+      <FirestoreCollection path={collectionName} render={renderMock} />
+    </FirestoreProvider>,
   );
+  const component = wrapper.find(FirestoreCollection).children(0);
 
   expect(collectionMock).toHaveBeenCalledTimes(1);
   expect(collectionMock).toHaveBeenCalledWith(collectionName);
@@ -30,5 +32,5 @@ test('should handle error getting snapshot', () => {
       snapshot: null,
     }),
   );
-  expect(wrapper.state('error')).not.toBe(null);
+  expect(component.state('error')).not.toBe(null);
 });

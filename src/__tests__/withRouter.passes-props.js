@@ -1,23 +1,23 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { mount } from 'enzyme';
-import { withFirestore } from '../';
+import { withFirestore, FirestoreProvider } from '../';
+import { createMocksForDocument } from './helpers/firestore-utils';
 
 test('passes all props down to wrapped component', () => {
-  const firestore = {};
-  const emptyContext = {};
+  const { firebaseMock, firestoreMock } = createMocksForDocument();
   const propsToBePassed = { propA: 'test' };
   const mockFunctionalComponent = jest.fn().mockReturnValue(<div />);
   const Component = withFirestore(mockFunctionalComponent);
 
-  mount(<Component {...propsToBePassed} />, {
-    context: { firestoreDatabase: firestore },
-    childContextTypes: { firestoreDatabase: PropTypes.object.isRequired },
-  });
+  mount(
+    <FirestoreProvider firebase={firebaseMock}>
+      <Component {...propsToBePassed} />
+    </FirestoreProvider>,
+  );
 
   expect(mockFunctionalComponent).toHaveBeenCalledTimes(1);
   expect(mockFunctionalComponent).toHaveBeenCalledWith(
-    { firestore, ...propsToBePassed },
-    emptyContext,
+    { firestore: firestoreMock, ...propsToBePassed },
+    {},
   );
 });

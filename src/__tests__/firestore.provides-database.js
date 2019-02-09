@@ -1,15 +1,18 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import { Firestore } from '../';
+import { Firestore, FirestoreProvider } from '../';
+import { createMocksForDocument } from './helpers/firestore-utils';
 
 test('provides the firestore database in render function', () => {
-  const firestore = {};
+  const { firebaseMock, firestoreMock } = createMocksForDocument();
   const renderMock = jest.fn().mockReturnValue(<div />);
 
-  mount(<Firestore render={renderMock} />, {
-    context: { firestoreDatabase: firestore },
-  });
+  mount(
+    <FirestoreProvider firebase={firebaseMock}>
+      <Firestore render={renderMock} />
+    </FirestoreProvider>,
+  );
 
   expect(renderMock).toHaveBeenCalledTimes(1);
-  expect(renderMock).toHaveBeenCalledWith({ firestore });
+  expect(renderMock).toHaveBeenCalledWith({ firestore: firestoreMock });
 });

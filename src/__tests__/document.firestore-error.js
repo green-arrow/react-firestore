@@ -1,24 +1,23 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import { FirestoreDocument } from '../';
+import { FirestoreDocument, FirestoreProvider } from '../';
 import { createMocksForDocument } from './helpers/firestore-utils';
 
 test('should handle error getting snapshot', () => {
   const options = { onSnapshotMockError: true };
-  const {
-    firestoreMock,
-    documentMock,
-    onSnapshotMock,
-  } = createMocksForDocument(null, options);
+  const { firebaseMock, documentMock, onSnapshotMock } = createMocksForDocument(
+    null,
+    options,
+  );
   const renderMock = jest.fn().mockReturnValue(<div />);
   const documentPath = 'error/1';
 
   const wrapper = mount(
-    <FirestoreDocument path={documentPath} render={renderMock} />,
-    {
-      context: { firestoreDatabase: firestoreMock, firestoreCache: {} },
-    },
+    <FirestoreProvider firebase={firebaseMock}>
+      <FirestoreDocument path={documentPath} render={renderMock} />
+    </FirestoreProvider>,
   );
+  const component = wrapper.find(FirestoreDocument).children(0);
 
   expect(documentMock).toHaveBeenCalledTimes(1);
   expect(documentMock).toHaveBeenCalledWith(documentPath);
@@ -40,7 +39,7 @@ test('should handle error getting snapshot', () => {
       snapshot: null,
     }),
   );
-  expect(wrapper.state('error')).not.toBe(null);
+  expect(component.state('error')).not.toBe(null);
 });
 
 test('should handle error when document id does not exist', () => {
@@ -49,20 +48,19 @@ test('should handle error when document id does not exist', () => {
     name: 'John Smith',
   };
   const options = { onDataMockError: true };
-  const {
-    firestoreMock,
-    documentMock,
-    onSnapshotMock,
-  } = createMocksForDocument(doc, options);
+  const { firebaseMock, documentMock, onSnapshotMock } = createMocksForDocument(
+    doc,
+    options,
+  );
   const renderMock = jest.fn().mockReturnValue(<div />);
   const documentPath = 'error/1';
 
   const wrapper = mount(
-    <FirestoreDocument path={documentPath} render={renderMock} />,
-    {
-      context: { firestoreDatabase: firestoreMock, firestoreCache: {} },
-    },
+    <FirestoreProvider firebase={firebaseMock}>
+      <FirestoreDocument path={documentPath} render={renderMock} />
+    </FirestoreProvider>,
   );
+  const component = wrapper.find(FirestoreDocument).children(0);
 
   expect(documentMock).toHaveBeenCalledTimes(1);
   expect(documentMock).toHaveBeenCalledWith(documentPath);
@@ -75,5 +73,5 @@ test('should handle error when document id does not exist', () => {
       error: expect.any(Error),
     }),
   );
-  expect(wrapper.state('error')).not.toBe(null);
+  expect(component.state('error')).not.toBe(null);
 });

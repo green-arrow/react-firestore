@@ -1,11 +1,11 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import { FirestoreCollection } from '../';
+import { FirestoreCollection, FirestoreProvider } from '../';
 import { createMocksForCollection } from './helpers/firestore-utils';
 
 test('sorts by a single field', () => {
   const {
-    firestoreMock,
+    firebaseMock,
     collectionMock,
     query,
     onSnapshotMock,
@@ -15,12 +15,13 @@ test('sorts by a single field', () => {
   const sortField = 'name';
 
   mount(
-    <FirestoreCollection
-      path={collectionName}
-      sort={sortField}
-      render={renderMock}
-    />,
-    { context: { firestoreDatabase: firestoreMock, firestoreCache: {} } }
+    <FirestoreProvider firebase={firebaseMock}>
+      <FirestoreCollection
+        path={collectionName}
+        sort={sortField}
+        render={renderMock}
+      />
+    </FirestoreProvider>,
   );
 
   expect(collectionMock).toHaveBeenCalledTimes(1);
@@ -33,13 +34,13 @@ test('sorts by a single field', () => {
     expect.objectContaining({
       isLoading: true,
       data: [],
-    })
+    }),
   );
 });
 
 test('sorts by a multiple fields', () => {
   const {
-    firestoreMock,
+    firebaseMock,
     collectionMock,
     query,
     onSnapshotMock,
@@ -49,12 +50,13 @@ test('sorts by a multiple fields', () => {
   const sort = 'name,joinedDate:desc';
 
   mount(
-    <FirestoreCollection
-      path={collectionName}
-      sort={sort}
-      render={renderMock}
-    />,
-    { context: { firestoreDatabase: firestoreMock, firestoreCache: {} } }
+    <FirestoreProvider firebase={firebaseMock}>
+      <FirestoreCollection
+        path={collectionName}
+        sort={sort}
+        render={renderMock}
+      />
+    </FirestoreProvider>,
   );
 
   expect(collectionMock).toHaveBeenCalledTimes(1);
@@ -68,6 +70,6 @@ test('sorts by a multiple fields', () => {
     expect.objectContaining({
       isLoading: true,
       data: [],
-    })
+    }),
   );
 });

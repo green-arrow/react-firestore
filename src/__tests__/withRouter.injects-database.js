@@ -1,22 +1,22 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { mount } from 'enzyme';
-import { withFirestore } from '../';
+import { withFirestore, FirestoreProvider } from '../';
+import { createMocksForDocument } from './helpers/firestore-utils';
 
 test('injects component with firestore database', () => {
-  const firestore = {};
-  const emptyContext = {};
+  const { firebaseMock, firestoreMock } = createMocksForDocument();
   const mockFunctionalComponent = jest.fn().mockReturnValue(<div />);
   const Component = withFirestore(mockFunctionalComponent);
 
-  mount(<Component />, {
-    context: { firestoreDatabase: firestore },
-    childContextTypes: { firestoreDatabase: PropTypes.object.isRequired },
-  });
+  mount(
+    <FirestoreProvider firebase={firebaseMock}>
+      <Component />
+    </FirestoreProvider>,
+  );
 
   expect(mockFunctionalComponent).toHaveBeenCalledTimes(1);
   expect(mockFunctionalComponent).toHaveBeenCalledWith(
-    { firestore },
-    emptyContext,
+    { firestore: firestoreMock },
+    {},
   );
 });

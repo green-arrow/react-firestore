@@ -1,24 +1,26 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import hoistStatics from 'hoist-non-react-statics';
-import Firestore from './Firestore';
+import { FirestoreContext } from './FirestoreProvider';
 
 const withFirestore = Component => {
-  const C = props => {
-    const { wrappedComponentRef, ...remainingProps } = props;
-    return (
-      <Firestore
-        render={firestoreComponentProps => (
+  const C = ({ wrappedComponentRef, ...remainingProps }) => (
+    <FirestoreContext.Consumer>
+      {value => {
+        if (!value) {
+          return null;
+        }
+        const { firestoreDatabase } = value;
+        return (
           <Component
             {...remainingProps}
-            {...firestoreComponentProps}
+            firestore={firestoreDatabase}
             ref={wrappedComponentRef}
           />
-        )}
-      />
-    );
-  };
-
+        );
+      }}
+    </FirestoreContext.Consumer>
+  );
   C.displayName = `withFirestore(${Component.displayName || Component.name})`;
   C.WrappedComponent = Component;
   C.propTypes = {
