@@ -46,7 +46,7 @@
   },
   "peerDependencies": {
     "prop-types": ">=15",
-    "react": ">=15"
+    "react": ">=16.3"
   },
   "devDependencies": {
     "commitizen": "^2.9.6",
