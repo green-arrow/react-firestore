@@ -30,10 +30,8 @@ export default class FirestoreProvider extends Component {
   }
 
   render() {
-    const { firestoreDatabase, firestoreCache } = this.state;
-
     return (
-      <FirestoreContext.Provider value={{ firestoreDatabase, firestoreCache }}>
+      <FirestoreContext.Provider value={this.state}>
         {this.props.children}
       </FirestoreContext.Provider>
     );
