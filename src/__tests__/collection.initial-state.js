@@ -1,20 +1,22 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import { FirestoreCollection } from '../';
+import { FirestoreCollection, FirestoreProvider } from '../';
 import { createMocksForCollection } from './helpers/firestore-utils';
 
 test('initial state set up correctly', () => {
   const {
-    firestoreMock,
+    firebaseMock,
     collectionMock,
     onSnapshotMock,
   } = createMocksForCollection();
   const renderMock = jest.fn().mockReturnValue(<div />);
   const collectionName = 'users';
 
-  mount(<FirestoreCollection path={collectionName} render={renderMock} />, {
-    context: { firestoreDatabase: firestoreMock, firestoreCache: {} },
-  });
+  mount(
+    <FirestoreProvider firebase={firebaseMock}>
+      <FirestoreCollection path={collectionName} render={renderMock} />
+    </FirestoreProvider>,
+  );
 
   expect(collectionMock).toHaveBeenCalledTimes(1);
   expect(collectionMock).toHaveBeenCalledWith(collectionName);
@@ -30,7 +32,7 @@ test('initial state set up correctly', () => {
 
 test('renders child prop', () => {
   const {
-    firestoreMock,
+    firebaseMock,
     collectionMock,
     onSnapshotMock,
   } = createMocksForCollection();
@@ -38,12 +40,11 @@ test('renders child prop', () => {
   const collectionName = 'users';
 
   mount(
-    <FirestoreCollection path={collectionName}>
-      {renderMock}
-    </FirestoreCollection>,
-    {
-      context: { firestoreDatabase: firestoreMock, firestoreCache: {} },
-    },
+    <FirestoreProvider firebase={firebaseMock}>
+      <FirestoreCollection path={collectionName}>
+        {renderMock}
+      </FirestoreCollection>
+    </FirestoreProvider>,
   );
 
   expect(collectionMock).toHaveBeenCalledTimes(1);
@@ -60,15 +61,17 @@ test('renders child prop', () => {
 
 test('renders nothing if passed no render prop or children', () => {
   const {
-    firestoreMock,
+    firebaseMock,
     collectionMock,
     onSnapshotMock,
   } = createMocksForCollection();
   const collectionName = 'users';
 
-  mount(<FirestoreCollection path={collectionName} />, {
-    context: { firestoreDatabase: firestoreMock, firestoreCache: {} },
-  });
+  mount(
+    <FirestoreProvider firebase={firebaseMock}>
+      <FirestoreCollection path={collectionName} />
+    </FirestoreProvider>,
+  );
 
   expect(collectionMock).toHaveBeenCalledTimes(1);
   expect(collectionMock).toHaveBeenCalledWith(collectionName);

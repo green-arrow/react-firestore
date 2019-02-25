@@ -1,6 +1,6 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import { FirestoreDocument } from '../';
+import { FirestoreDocument, FirestoreProvider } from '../';
 import { createMocksForDocument } from './helpers/firestore-utils';
 
 test('integrates with firestore using onSnapshot', () => {
@@ -9,7 +9,7 @@ test('integrates with firestore using onSnapshot', () => {
     name: 'John Smith',
   };
   const {
-    firestoreMock,
+    firebaseMock,
     documentMock,
     snapshot,
     onSnapshotMock,
@@ -17,9 +17,11 @@ test('integrates with firestore using onSnapshot', () => {
   const renderMock = jest.fn().mockReturnValue(<div />);
   const documentPath = 'users/1';
 
-  mount(<FirestoreDocument path={documentPath} render={renderMock} />, {
-    context: { firestoreDatabase: firestoreMock, firestoreCache: {} },
-  });
+  mount(
+    <FirestoreProvider firebase={firebaseMock}>
+      <FirestoreDocument path={documentPath} render={renderMock} />
+    </FirestoreProvider>,
+  );
 
   expect(documentMock).toHaveBeenCalledTimes(1);
   expect(documentMock).toHaveBeenCalledWith(documentPath);
@@ -43,15 +45,16 @@ test('integrates with firestore using onSnapshot', () => {
 
 test('unsubscribes from firestore when component unmounts', () => {
   const {
-    firestoreMock,
+    firebaseMock,
     onSnapshotMock,
     unsubscribeMock,
   } = createMocksForDocument();
   const renderMock = jest.fn().mockReturnValue(<div />);
 
   const component = mount(
-    <FirestoreDocument path="users/1" render={renderMock} />,
-    { context: { firestoreDatabase: firestoreMock, firestoreCache: {} } },
+    <FirestoreProvider firebase={firebaseMock}>
+      <FirestoreDocument path="users/1" render={renderMock} />,
+    </FirestoreProvider>,
   );
 
   expect(onSnapshotMock).toHaveBeenCalledTimes(1);
@@ -63,18 +66,20 @@ test('unsubscribes from firestore when component unmounts', () => {
 });
 
 test('does not unsubscribe if no unsubscribe hook exists', () => {
-  const { firestoreMock, unsubscribeMock } = createMocksForDocument();
+  const { firebaseMock, unsubscribeMock } = createMocksForDocument();
   const renderMock = jest.fn().mockReturnValue(<div />);
 
-  const component = mount(
-    <FirestoreDocument path="users/1" render={renderMock} />,
-    { context: { firestoreDatabase: firestoreMock, firestoreCache: {} } },
+  const wrapper = mount(
+    <FirestoreProvider firebase={firebaseMock}>
+      <FirestoreDocument path="users/1" render={renderMock} />,
+    </FirestoreProvider>,
   );
+  const component = wrapper.find(FirestoreDocument).children(0);
 
   expect(unsubscribeMock).not.toHaveBeenCalled();
 
   component.instance().unsubscribe = null;
-  component.unmount();
+  wrapper.unmount();
 
   expect(unsubscribeMock).not.toHaveBeenCalled();
 });
@@ -86,7 +91,7 @@ describe('when props change', () => {
   };
   const {
     documentMock,
-    firestoreMock,
+    firebaseMock,
     snapshot,
     onSnapshotMock,
     unsubscribeMock,
@@ -95,15 +100,19 @@ describe('when props change', () => {
   const documentPath1 = 'users/1';
   const documentPath2 = 'users/2';
 
-  const component = mount(
-    <FirestoreDocument path={documentPath1} render={renderMock} />,
-    {
-      context: { firestoreDatabase: firestoreMock, firestoreCache: {} },
-    },
+  // eslint-disable-next-line react/prop-types
+  const Wrapper = ({ path }) => (
+    <FirestoreProvider firebase={firebaseMock}>
+      <FirestoreDocument path={path} render={renderMock} />
+    </FirestoreProvider>
   );
 
+  const wrapper = mount(<Wrapper path={documentPath1} />);
+
+  const component = wrapper.find(FirestoreDocument).children(0);
+
   describe('when "path" prop is the same', () => {
-    beforeEach(() => component.setProps({ path: documentPath1 }));
+    beforeEach(() => wrapper.setProps({ path: documentPath1 }));
 
     test('it does not change isLoading state', () => {
       expect(renderMock).toHaveBeenCalledTimes(3);
@@ -137,7 +146,7 @@ describe('when props change', () => {
   describe('when "path" prop is different', () => {
     test('resets isLoading state', () => {
       renderMock.mockClear();
-      component.setProps({ path: documentPath2 });
+      wrapper.setProps({ path: documentPath2 });
 
       expect(renderMock).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -147,7 +156,7 @@ describe('when props change', () => {
     });
 
     test('wires up a new listener', () => {
-      component.setProps({ path: documentPath2 });
+      wrapper.setProps({ path: documentPath2 });
 
       expect(documentMock).toHaveBeenCalledTimes(2);
       expect(documentMock).toHaveBeenCalledWith(documentPath2);
@@ -156,7 +165,7 @@ describe('when props change', () => {
 
     describe('when an unsubscribe listener exists', () => {
       test('unsubscribes active listener', () => {
-        component.setProps({ path: documentPath2 });
+        wrapper.setProps({ path: documentPath2 });
 
         expect(unsubscribeMock).toHaveBeenCalledTimes(1);
       });
@@ -166,7 +175,7 @@ describe('when props change', () => {
       test('does not execute an unsubscribe method', () => {
         unsubscribeMock.mockClear();
         component.instance().unsubscribe = null;
-        component.setProps({ path: documentPath2 });
+        wrapper.setProps({ path: documentPath2 });
 
         expect(unsubscribeMock).not.toHaveBeenCalled();
       });

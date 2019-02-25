@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { mount } from 'enzyme';
-import { withFirestore } from '../';
+import { withFirestore, FirestoreProvider } from '../';
+import { createMocksForDocument } from './helpers/firestore-utils';
 
 const createChild = () => {
   // eslint-disable-next-line react/prefer-stateless-function
@@ -15,27 +15,25 @@ const createChild = () => {
 };
 
 test('passes wrappedComponentRef to wrapped component', () => {
-  const firestore = {};
+  const { firebaseMock, firestoreMock } = createMocksForDocument();
   const otherProps = { testProp: 'test' };
   const Child = createChild();
   const ComponentWithFirestore = withFirestore(Child);
   let wrappedRef;
 
   const component = mount(
-    <ComponentWithFirestore
-      {...otherProps}
-      wrappedComponentRef={ref => {
-        wrappedRef = ref;
-      }}
-    />,
-    {
-      context: { firestoreDatabase: firestore },
-      childContextTypes: { firestoreDatabase: PropTypes.object.isRequired },
-    },
+    <FirestoreProvider firebase={firebaseMock}>
+      <ComponentWithFirestore
+        {...otherProps}
+        wrappedComponentRef={ref => {
+          wrappedRef = ref;
+        }}
+      />
+    </FirestoreProvider>,
   );
 
   const child = component.find(Child);
 
   expect(wrappedRef).toBe(child.instance());
-  expect(child.props()).toEqual({ firestore, ...otherProps });
+  expect(child.props()).toEqual({ firestore: firestoreMock, ...otherProps });
 });

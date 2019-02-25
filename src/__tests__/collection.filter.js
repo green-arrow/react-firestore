@@ -1,11 +1,11 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import { FirestoreCollection } from '../';
+import { FirestoreCollection, FirestoreProvider } from '../';
 import { createMocksForCollection } from './helpers/firestore-utils';
 
 test('filters the documents returned with a simple filter', () => {
   const {
-    firestoreMock,
+    firebaseMock,
     collectionMock,
     query,
     onSnapshotMock,
@@ -15,12 +15,13 @@ test('filters the documents returned with a simple filter', () => {
   const filter = ['name', '==', 'Mike'];
 
   mount(
-    <FirestoreCollection
-      path={collectionName}
-      filter={filter}
-      render={renderMock}
-    />,
-    { context: { firestoreDatabase: firestoreMock, firestoreCache: {} } },
+    <FirestoreProvider firebase={firebaseMock}>
+      <FirestoreCollection
+        path={collectionName}
+        filter={filter}
+        render={renderMock}
+      />
+    </FirestoreProvider>,
   );
 
   expect(collectionMock).toHaveBeenCalledTimes(1);
@@ -39,7 +40,7 @@ test('filters the documents returned with a simple filter', () => {
 
 test('filters the documents returned with a compound filter', () => {
   const {
-    firestoreMock,
+    firebaseMock,
     collectionMock,
     query,
     onSnapshotMock,
@@ -49,12 +50,13 @@ test('filters the documents returned with a compound filter', () => {
   const filter = [['firstName', '==', 'Mike'], ['lastName', '==', 'Smith']];
 
   mount(
-    <FirestoreCollection
-      path={collectionName}
-      filter={filter}
-      render={renderMock}
-    />,
-    { context: { firestoreDatabase: firestoreMock, firestoreCache: {} } },
+    <FirestoreProvider firebase={firebaseMock}>
+      <FirestoreCollection
+        path={collectionName}
+        filter={filter}
+        render={renderMock}
+      />
+    </FirestoreProvider>,
   );
 
   expect(collectionMock).toHaveBeenCalledTimes(1);
@@ -73,23 +75,25 @@ test('filters the documents returned with a compound filter', () => {
 });
 
 test('filter accepts objects and numbers', () => {
-  const { firestoreMock } = createMocksForCollection();
+  const { firebaseMock, firestoreMock } = createMocksForCollection();
   const renderMock = jest.fn().mockReturnValue(<div />);
   const collectionName = 'users';
   mount(
-    <FirestoreCollection
-      path={collectionName}
-      filter={['number', '==', 5]}
-      render={renderMock}
-    />,
-    { context: { firestoreDatabase: firestoreMock, firestoreCache: {} } },
+    <FirestoreProvider firebase={firebaseMock}>
+      <FirestoreCollection
+        path={collectionName}
+        filter={['number', '==', 5]}
+        render={renderMock}
+      />
+    </FirestoreProvider>,
   );
   mount(
-    <FirestoreCollection
-      path={collectionName}
-      filter={['ref', '==', firestoreMock.doc('things/foobar')]}
-      render={renderMock}
-    />,
-    { context: { firestoreDatabase: firestoreMock, firestoreCache: {} } },
+    <FirestoreProvider firebase={firebaseMock}>
+      <FirestoreCollection
+        path={collectionName}
+        filter={['ref', '==', firestoreMock.doc('things/foobar')]}
+        render={renderMock}
+      />
+    </FirestoreProvider>,
   );
 });
