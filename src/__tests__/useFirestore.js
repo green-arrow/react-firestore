@@ -4,7 +4,7 @@ import { act } from 'react-dom/test-utils';
 import { mount } from 'enzyme';
 
 import { FirestoreProvider } from '../';
-import { useFirestore, query } from '../useFirestore';
+import { useFirestore, fireQuery } from '../useFirestore';
 import {
   createMocksForDocument,
   createMocksForCollection,
@@ -36,7 +36,7 @@ describe('hooks', () => {
     });
   });
 
-  describe('query', () => {
+  describe('fireQuery', () => {
     let container;
 
     beforeEach(() => {
@@ -55,10 +55,10 @@ describe('hooks', () => {
         foo: 'bar',
       });
       const Component = () => {
-        const { data } = query()
+        const { data } = fireQuery()
           .collection('users')
           .doc('foobar')
-          .useSnapshot();
+          .useResult();
         if (data) {
           return <p>{data.foo}</p>;
         }
@@ -97,12 +97,12 @@ describe('hooks', () => {
         },
       ]);
       const Component = () => {
-        const { data } = query()
+        const { data } = fireQuery()
           .collection('users')
           .where('role', '==', 'admin')
           .limit(5)
           .orderBy('role', 'desc')
-          .useSnapshot();
+          .useResult();
 
         expect(data).toBeTruthy();
 
@@ -133,6 +133,60 @@ describe('hooks', () => {
       ).toEqual(['foo', 'bar']);
     });
 
+    it('is able to perform dummy calls', () => {
+      // TODO: improve this unit test: it's all about the _ cal:
+      const {
+        firebaseMock,
+        collectionMock,
+        onSnapshotMock,
+      } = createMocksForCollection([
+        {
+          id: 'foobar',
+          name: 'foo',
+          role: 'admin',
+        },
+        {
+          id: 'barfoo',
+          name: 'bar',
+          role: 'admin',
+        },
+      ]);
+      const Component = () => {
+        const { data } = fireQuery()
+          .collection('users')
+          .where('role', '==', 'admin')
+          .limit(5)
+          ._('role', 'desc')
+          .useResult();
+
+        expect(data).toBeTruthy();
+
+        return (
+          <ul>
+            {data.map(user => {
+              expect(user.id).toBeTruthy();
+              return <li key={user.id}>{user.name}</li>;
+            })}
+          </ul>
+        );
+      };
+      act(() => {
+        ReactDOM.render(
+          <FirestoreProvider firebase={firebaseMock}>
+            <Component />
+          </FirestoreProvider>,
+          container,
+        );
+      });
+      const items = container.querySelectorAll('li');
+
+      expect(onSnapshotMock).toHaveBeenCalledTimes(1);
+      expect(collectionMock).toHaveBeenCalledTimes(1);
+      expect(items).toHaveLength(2);
+      expect(
+        Array.prototype.map.apply(items, [item => item.textContent]),
+      ).toEqual(['foo', 'bar']);
+    });
     it('is able to catch errors when retrieving a document', () => {
       const { firebaseMock, documentMock } = createMocksForDocument(
         {
@@ -144,10 +198,10 @@ describe('hooks', () => {
         },
       );
       const Component = () => {
-        const { error } = query()
+        const { error } = fireQuery()
           .collection('users')
           .doc('foobar')
-          .useSnapshot();
+          .useResult();
         if (error) {
           return <p>{error.message}</p>;
         }
@@ -187,9 +241,9 @@ describe('hooks', () => {
         },
       );
       const Component = () => {
-        const { error } = query()
+        const { error } = fireQuery()
           .collection('users')
-          .useSnapshot();
+          .useResult();
         if (error) {
           return <p>{error.message}</p>;
         }
@@ -216,10 +270,10 @@ describe('hooks', () => {
         foo: 'bar',
       });
       const Component = () => {
-        const { data } = query()
+        const { data } = fireQuery()
           .collection('users')
           .doc('foobar')
-          .useSnapshot();
+          .useResult();
 
         return <p>{data && data.foo}</p>;
       };
@@ -253,9 +307,9 @@ describe('hooks', () => {
         },
       ]);
       const Component = () => {
-        const { data } = query()
+        const { data } = fireQuery()
           .collection('users')
-          .useSnapshot();
+          .useResult();
 
         expect(data).toBeTruthy();
 
@@ -286,10 +340,10 @@ describe('hooks', () => {
       });
       const Component = () => {
         const enabled = false;
-        query(enabled)
+        fireQuery()
           .collection('users')
           .doc('foobar')
-          .useSnapshot();
+          .useResult(enabled);
 
         return null;
       };
@@ -322,9 +376,48 @@ describe('hooks', () => {
       ]);
       const Component = () => {
         const enabled = false;
-        const { data } = query(enabled)
+        const { data } = fireQuery()
           .collection('users')
-          .useSnapshot();
+          .useResult(enabled);
+
+        expect(data).toBeTruthy();
+
+        return null;
+      };
+      act(() => {
+        ReactDOM.render(
+          <FirestoreProvider firebase={firebaseMock}>
+            <Component />
+          </FirestoreProvider>,
+          container,
+        );
+      });
+
+      ReactDOM.unmountComponentAtNode(container);
+
+      expect(onSnapshotMock).not.toHaveBeenCalled();
+    });
+
+    it('is able to disable the query when requesting a subcollection', () => {
+      const { firebaseMock, onSnapshotMock } = createMocksForCollection([
+        {
+          id: 'foobar',
+          name: 'foo',
+          role: 'admin',
+        },
+        {
+          id: 'barfoo',
+          name: 'bar',
+          role: 'admin',
+        },
+      ]);
+      const Component = () => {
+        const enabled = false;
+        const { data } = fireQuery()
+          .collection('users')
+          .doc('something')
+          .collection('tasks')
+          .useResult(enabled);
 
         expect(data).toBeTruthy();
 

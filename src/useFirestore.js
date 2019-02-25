@@ -16,7 +16,7 @@ const getDataFromDoc = doc => ({
   ...doc.data(),
 });
 
-FirestoreQueryBuilder.prototype.useSnapshot = function useSnapshot() {
+FirestoreQueryBuilder.prototype.useResult = function useResult(enable = true) {
   const [state, setState] = useState({
     error: null,
     isLoading: true,
@@ -24,12 +24,12 @@ FirestoreQueryBuilder.prototype.useSnapshot = function useSnapshot() {
     data: this.isDoc ? null : [],
   });
 
-  const dependencies = Array.prototype.concat.apply([this.enable], this.calls);
+  const dependencies = Array.prototype.concat.apply([!!enable], this.calls);
 
   const firestore = useFirestore();
 
   useEffect(() => {
-    if (!this.enable) {
+    if (!enable) {
       setState({
         error: null,
         isLoading: false,
@@ -46,7 +46,9 @@ FirestoreQueryBuilder.prototype.useSnapshot = function useSnapshot() {
     });
     let result = firestore;
     this.calls.forEach(([method, ...args]) => {
-      result = result[method](...args);
+      if (method !== '_') {
+        result = result[method](...args);
+      }
     });
     const unsubscribe = result.onSnapshot(
       snapshot =>
@@ -72,21 +74,25 @@ FirestoreQueryBuilder.prototype.useSnapshot = function useSnapshot() {
   return state;
 };
 
-['doc', 'collection', 'where', 'limit', 'orderBy'].forEach(method => {
+['_', 'doc', 'collection', 'where', 'limit', 'orderBy'].forEach(method => {
   FirestoreQueryBuilder.prototype[method] = function addCall(...args) {
     const newBuilder = new FirestoreQueryBuilder();
     newBuilder.calls = this.calls.slice();
     newBuilder.calls.push([method, ...args]);
-    newBuilder.enable = this.enable;
-    newBuilder.isDoc = this.isDoc || method === 'doc';
+    if (method === 'doc') {
+      newBuilder.isDoc = true;
+    } else if (method === 'collection') {
+      newBuilder.isDoc = false;
+    } else {
+      newBuilder.isDoc = this.isDoc;
+    }
     return newBuilder;
   };
 });
 
-export const query = (enable = true) => {
+export const fireQuery = () => {
   const newBuilder = new FirestoreQueryBuilder();
   newBuilder.calls = [];
-  newBuilder.enable = enable;
   newBuilder.isDoc = false;
   return newBuilder;
 };

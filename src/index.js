@@ -3,7 +3,7 @@ import FirestoreProvider from './FirestoreProvider';
 import FirestoreCollection from './FirestoreCollection';
 import FirestoreDocument from './FirestoreDocument';
 import withFirestore from './withFirestore';
-import { query, useFirestore } from './useFirestore';
+import { fireQuery, useFirestore } from './useFirestore';
 
 export {
   Firestore,
@@ -12,5 +12,5 @@ export {
   FirestoreDocument,
   withFirestore,
   useFirestore,
-  query,
+  fireQuery,
 };
