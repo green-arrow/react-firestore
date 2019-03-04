@@ -15,10 +15,7 @@ test('sets timestampsInSnapshots correctly', () => {
     </FirestoreProvider>,
   );
 
-  expect(firestore.settings).toHaveBeenCalledTimes(1);
-  expect(firestore.settings).toHaveBeenCalledWith({
-    timestampsInSnapshots: false,
-  });
+  expect(firestore.settings).toHaveBeenCalledTimes(0);
 
   mount(
     <FirestoreProvider firebase={firebase} useTimestampsInSnapshots>
@@ -26,8 +23,19 @@ test('sets timestampsInSnapshots correctly', () => {
     </FirestoreProvider>,
   );
 
-  expect(firestore.settings).toHaveBeenCalledTimes(2);
+  expect(firestore.settings).toHaveBeenCalledTimes(1);
   expect(firestore.settings).toHaveBeenCalledWith({
     timestampsInSnapshots: true,
+  });
+
+  mount(
+    <FirestoreProvider firebase={firebase} useTimestampsInSnapshots={false}>
+      <div>Test</div>
+    </FirestoreProvider>,
+  );
+
+  expect(firestore.settings).toHaveBeenCalledTimes(2);
+  expect(firestore.settings).toHaveBeenCalledWith({
+    timestampsInSnapshots: false,
   });
 });
