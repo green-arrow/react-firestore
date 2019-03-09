@@ -1,8 +1,7 @@
 {
   "name": "react-firestore",
   "version": "0.0.0-semantically-released",
-  "description":
-    "React components to fetch data from firestore using render props",
+  "description": "React components to fetch data from firestore using render props",
   "author": "Andrew Walton",
   "license": "MIT",
   "homepage": "https://github.com/green-arrow/react-firestore#readme",
@@ -25,10 +24,17 @@
     "test:build": "kcd-scripts test --no-watch",
     "build-and-test": "npm run build -s && npm run test:build -s",
     "validate": "kcd-scripts validate lint,build-and-test,test:cover",
-    "precommit": "kcd-scripts precommit",
     "prepare": "npm run build"
   },
-  "files": ["dist", "preact"],
+  "husky": {
+    "hooks": {
+      "pre-commit": "kcd-scripts pre-commit"
+    }
+  },
+  "files": [
+    "dist",
+    "preact"
+  ],
   "eslintConfig": {
     "extends": "./node_modules/kcd-scripts/eslint.js",
     "rules": {
@@ -36,29 +42,43 @@
       "no-eq-null": "off",
       "eqeqeq": "off",
       "react/jsx-indent": "off",
-      "complexity": ["error", 12]
+      "react/no-unused-state": "off",
+      "complexity": [
+        "error",
+        12
+      ]
     }
   },
-  "eslintIgnore": ["node_modules", "coverage", "dist"],
-  "keywords": ["react", "firestore", "firebase"],
+  "eslintIgnore": [
+    "node_modules",
+    "coverage",
+    "dist",
+    "__tests__"
+  ],
+  "keywords": [
+    "react",
+    "firestore",
+    "firebase"
+  ],
   "dependencies": {
-    "hoist-non-react-statics": "^2.3.1"
+    "@babel/runtime": "^7.3.4",
+    "hoist-non-react-statics": "^3.3.0"
   },
   "peerDependencies": {
     "prop-types": ">=15",
     "react": ">=16.3"
   },
   "devDependencies": {
-    "commitizen": "^2.9.6",
+    "commitizen": "^3.0.7",
     "cz-conventional-changelog": "^2.1.0",
     "enzyme": "^3.8.0",
     "enzyme-adapter-react-16": "^1.9.1",
-    "kcd-scripts": "^0.32.1",
-    "preact": "^8.2.7",
-    "prop-types": "^15.6.0",
-    "react": "^16.8.1",
-    "react-dom": "^16.8.1",
-    "react-test-renderer": "^16.8.1"
+    "kcd-scripts": "^1.1.0",
+    "preact": "^8.4.2",
+    "prop-types": "^15.7.2",
+    "react": "^16.8.4",
+    "react-dom": "^16.8.4",
+    "react-test-renderer": "^16.8.4"
   },
   "config": {
     "commitizen": {

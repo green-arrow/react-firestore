@@ -18,7 +18,7 @@ class FirestoreDocument extends Component {
   };
 
   componentDidMount() {
-    this.setupFirestoreListener(this.props);
+    this.setupFirestoreListener();
   }
 
   componentWillUnmount() {
@@ -29,9 +29,7 @@ class FirestoreDocument extends Component {
     if (nextProps.path !== this.props.path) {
       this.handleUnsubscribe();
 
-      this.setState({ isLoading: true }, () =>
-        this.setupFirestoreListener(this.props),
-      );
+      this.setState({ isLoading: true }, () => this.setupFirestoreListener());
     }
   }
 
@@ -41,9 +39,8 @@ class FirestoreDocument extends Component {
     }
   }
 
-  setupFirestoreListener = props => {
-    const { firestore } = props;
-    const { path } = props;
+  setupFirestoreListener = () => {
+    const { firestore, path } = this.props;
     const documentRef = firestore.doc(path);
 
     this.unsubscribe = documentRef.onSnapshot(

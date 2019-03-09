@@ -31,7 +31,7 @@ class FirestoreCollection extends Component {
   };
 
   componentDidMount() {
-    this.setupFirestoreListener(this.props);
+    this.setupFirestoreListener();
   }
 
   componentWillUnmount() {
@@ -47,9 +47,7 @@ class FirestoreCollection extends Component {
     ) {
       this.handleUnsubscribe();
 
-      this.setState({ isLoading: true }, () =>
-        this.setupFirestoreListener(this.props),
-      );
+      this.setState({ isLoading: true }, () => this.setupFirestoreListener());
     }
   }
 
@@ -59,9 +57,8 @@ class FirestoreCollection extends Component {
     }
   }
 
-  setupFirestoreListener = props => {
-    const { firestore } = props;
-    const { path, ...queryProps } = props;
+  setupFirestoreListener = () => {
+    const { firestore, path, ...queryProps } = this.props;
     const collectionRef = firestore.collection(path);
     const query = this.buildQuery(collectionRef, queryProps);
 
