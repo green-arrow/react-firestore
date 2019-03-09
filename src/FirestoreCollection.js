@@ -1,5 +1,6 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
+import withFirestore from './withFirestore';
 import deepEqual from './utils/deepEqual';
 
 class FirestoreCollection extends Component {
@@ -19,11 +20,7 @@ class FirestoreCollection extends Component {
     ]),
     children: PropTypes.func,
     render: PropTypes.func,
-  };
-
-  static contextTypes = {
-    firestoreDatabase: PropTypes.object.isRequired,
-    firestoreCache: PropTypes.object.isRequired,
+    firestore: PropTypes.object.isRequired,
   };
 
   state = {
@@ -63,9 +60,9 @@ class FirestoreCollection extends Component {
   }
 
   setupFirestoreListener = props => {
-    const { firestoreDatabase } = this.context;
+    const { firestore } = props;
     const { path, ...queryProps } = props;
-    const collectionRef = firestoreDatabase.collection(path);
+    const collectionRef = firestore.collection(path);
     const query = this.buildQuery(collectionRef, queryProps);
 
     this.unsubscribe = query.onSnapshot(
@@ -139,4 +136,4 @@ class FirestoreCollection extends Component {
   }
 }
 
-export default FirestoreCollection;
+export default withFirestore(FirestoreCollection);

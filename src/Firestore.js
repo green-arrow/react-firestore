@@ -1,21 +1,15 @@
-import { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
+import { FirestoreContext } from './FirestoreProvider';
 
-class Firestore extends Component {
-  static propTypes = {
-    render: PropTypes.func.isRequired,
-  };
+const Firestore = ({ render }) => (
+  <FirestoreContext.Consumer>
+    {({ firestoreDatabase }) => render({ firestore: firestoreDatabase })}
+  </FirestoreContext.Consumer>
+);
 
-  static contextTypes = {
-    firestoreDatabase: PropTypes.object.isRequired,
-  };
-
-  render() {
-    const { firestoreDatabase } = this.context;
-    const { render } = this.props;
-
-    return render({ firestore: firestoreDatabase });
-  }
-}
+Firestore.propTypes = {
+  render: PropTypes.func.isRequired,
+};
 
 export default Firestore;

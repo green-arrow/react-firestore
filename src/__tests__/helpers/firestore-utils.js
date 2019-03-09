@@ -66,7 +66,12 @@ function createBaseMocks(snapshot, options) {
     doc: documentMock,
   };
 
+  const firebaseMock = {
+    firestore: () => firestoreMock,
+  };
+
   return {
+    firebaseMock,
     firestoreMock,
     collectionMock,
     documentMock,
