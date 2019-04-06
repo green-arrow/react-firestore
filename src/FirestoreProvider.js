@@ -11,17 +11,17 @@ export default class FirestoreProvider extends Component {
     useTimestampsInSnapshots: PropTypes.bool,
   };
 
-  static defaultProps = {
-    useTimestampsInSnapshots: false,
-  };
+  static defaultProps = {};
 
   constructor(props) {
     super(props);
 
     const { firebase, useTimestampsInSnapshots } = props;
-    const settings = { timestampsInSnapshots: useTimestampsInSnapshots };
     const firestore = firebase.firestore();
-    firestore.settings(settings);
+    if (typeof useTimestampsInSnapshots !== 'undefined') {
+      const settings = { timestampsInSnapshots: useTimestampsInSnapshots };
+      firestore.settings(settings);
+    }
 
     this.state = {
       firestoreDatabase: firestore,
